@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">misCacharros</string>
+    <string name="acercade">
+        Aplicación de prueba desarrollada
+        para el módulo de Programación Multimedia y Dispositivos Móviles por
+        José Luis Izquierdo Barberán
+        izquierdo.jl@gmail.com
+    </string>
+
+</resources>
