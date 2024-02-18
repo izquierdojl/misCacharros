@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/miscaharros"
-    android:backgroundTint="@color/design_default_color_secondary">
+    android:backgroundTint="@color/material_dynamic_neutral80">
 
     <TextView
         android:id="@+id/tAcercaDe"
