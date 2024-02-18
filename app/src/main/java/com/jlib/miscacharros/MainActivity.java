@@ -75,7 +75,10 @@ public class MainActivity extends AppCompatActivity {
             {
                 //contTipo.mostrar(0); // con esto se mostraría directamente
 
+                contTipo.listar();
+
                 // muy interesante, cuadro de selección
+                /*
                 final EditText entrada = new EditText(MainActivity.this);
                 entrada.setText("0");
                 new AlertDialog.Builder(MainActivity.this)
@@ -89,10 +92,10 @@ public class MainActivity extends AppCompatActivity {
                             }})
                         .setNegativeButton("Cancelar", null)
                         .show();
+                 */
             }
 
         });
-
 
     }
 

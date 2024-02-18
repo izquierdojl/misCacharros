@@ -3,7 +3,9 @@ package com.jlib.miscacharros.controlador;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.jlib.miscacharros.MainActivity;
 import com.jlib.miscacharros.datos.RepositorioTipos;
+import com.jlib.miscacharros.ui.VistaListaTipoActivity;
 import com.jlib.miscacharros.ui.VistaTipoActivity;
 
 public class ControladorTipo
@@ -15,6 +17,13 @@ public class ControladorTipo
         this.actividad = actividad;
         this.tipos = tipos;
     }
+
+    public void listar()
+    {
+        Intent i = new Intent( actividad, VistaListaTipoActivity.class );
+        actividad.startActivity(i);
+    }
+
 
     public void mostrar(int pos)
     {
