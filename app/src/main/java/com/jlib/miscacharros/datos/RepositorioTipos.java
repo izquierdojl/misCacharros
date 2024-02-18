@@ -9,4 +9,5 @@ public interface RepositorioTipos {
     void borrar(int id); // elimina un elemento por su ID
     int tamano(); // devuelve el tamaño del repositorio o número de elementos
     void actualiza(int id, Tipo tipo); // actualiza un tipo por su posicion
+    void anadeEjemplos(); // para pruebas
 }

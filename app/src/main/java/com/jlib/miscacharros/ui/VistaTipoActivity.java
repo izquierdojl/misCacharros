@@ -5,7 +5,9 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jlib.miscacharros.Aplicacion;
 import com.jlib.miscacharros.controlador.ControladorTipo;
+import com.jlib.miscacharros.datos.RepositorioTipos;
 import com.jlib.miscacharros.modelo.Tipo;
 import com.jlib.miscacharros.databinding.VistaTipoBinding;
 
@@ -24,13 +26,13 @@ public class VistaTipoActivity extends AppCompatActivity {
         pos = extras.getInt("pos",0);
         tipos = ((Aplicacion) getApplication()).tipos;
         contTipo = new ControladorTipo(this, tipos); // creamos el objeto controlador
-        tipo = tipos.elemento(pos);
+        tipo = tipos.tipo(pos);
         actualizaVistas();
     }
 
     public void actualizaVistas()
     {
-        tipo = tipos.elemento(pos);
+        tipo = tipos.tipo(pos);
         binding.nombre.setText(tipo.getNombre());
     }
 
