@@ -23,4 +23,11 @@ public class ControladorTipo
         actividad.startActivity(i);
     }
 
+    public void borrar(int pos)
+    {
+        tipos.borrar(pos);
+        actividad.finish();
+    }
+
+
 }
