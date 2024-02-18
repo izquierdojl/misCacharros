@@ -7,16 +7,19 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.google.android.material.tabs.TabLayout;
+import com.jlib.miscacharros.controlador.ControladorTipo;
 import com.jlib.miscacharros.ui.acercadeActivity;
+import com.jlib.miscacharros.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
     private TabLayout tabs;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(R.layout.activity_main);
 
         tabs = findViewById(R.id.tabs);
@@ -25,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
         tabs.addTab(tabs.newTab().setText("Cacharros"));
         tabs.addTab(tabs.newTab().setText("Categorías"));
         tabs.addTab(tabs.newTab().setText("Acerca de ..."));
+
+        //tipos = ((Aplicacion) getApplication().tipos);
+        //usoLugar = new ControladorTipo(this, tipos);
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

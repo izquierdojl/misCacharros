@@ -1,14 +1,14 @@
 package com.jlib.miscacharros.modelo;
 
-public class tipo {
+public class Tipo {
 
     private String nombre;
     private int orden;
 
-    public tipo() {
+    public Tipo() {
     }
 
-    public tipo(String nombre, int orden) {
+    public Tipo(String nombre, int orden) {
         this.nombre = nombre;
         this.orden = orden;
     }
