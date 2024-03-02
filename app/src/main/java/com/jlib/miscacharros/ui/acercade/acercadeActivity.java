@@ -1,4 +1,4 @@
-package com.jlib.miscacharros.ui;
+package com.jlib.miscacharros.ui.acercade;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;

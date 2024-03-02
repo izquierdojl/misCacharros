@@ -1,18 +1,15 @@
 package com.jlib.miscacharros;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 
 import com.google.android.material.tabs.TabLayout;
-import com.jlib.miscacharros.controlador.ControladorTipo;
-import com.jlib.miscacharros.datos.RepositorioTipos;
-import com.jlib.miscacharros.ui.acercadeActivity;
+import com.jlib.miscacharros.controlador.tipo.ControladorTipo;
+import com.jlib.miscacharros.datos.tipo.RepositorioTipos;
+import com.jlib.miscacharros.ui.acercade.acercadeActivity;
 import com.jlib.miscacharros.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         // creamos las tabs
         tabs.addTab(tabs.newTab().setText("Cacharros"));
         tabs.addTab(tabs.newTab().setText("Categorías"));
+        tabs.addTab(tabs.newTab().setText("Lugares"));
         tabs.addTab(tabs.newTab().setText("Acerca de ..."));
 
         tipos = ((Aplicacion) getApplication()).tipos ;
@@ -41,17 +39,19 @@ public class MainActivity extends AppCompatActivity {
 
         contTipo = new ControladorTipo(this, tipos);
 
+        /// aquí dibujaremos en un futuro la pantalla principal
+
+
+        /// acciones al pulsar sobre el tab
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition())
                 {
-                    case 0:
-                        break;
                     case 1:
                         lanzarVistaTipo(null);
                         break;
-                    case 2: // acerca de...
+                    case 3: // acerca de...
                         lanzarAcercaDe(null);
                         break;
                 }
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
                 contTipo.listar();
 
-                // muy interesante, cuadro de selección
+                // muy interesante, cuadro de selección para pedir un dato
                 /*
                 final EditText entrada = new EditText(MainActivity.this);
                 entrada.setText("0");

@@ -1,8 +1,6 @@
-package com.jlib.miscacharros.ui;
+package com.jlib.miscacharros.ui.tipo;
 
-import android.app.Application;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -11,21 +9,21 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.jlib.miscacharros.Aplicacion;
 import com.jlib.miscacharros.R;
-import com.jlib.miscacharros.controlador.ControladorTipo;
-import com.jlib.miscacharros.datos.RepositorioTipos;
+import com.jlib.miscacharros.controlador.tipo.ControladorTipo;
+import com.jlib.miscacharros.datos.tipo.RepositorioTipos;
 import com.jlib.miscacharros.modelo.Tipo;
-import com.jlib.miscacharros.databinding.VistaTipoBinding;
+import com.jlib.miscacharros.databinding.VistaTipoDetalleBinding;
 
-public class VistaTipoActivity extends AppCompatActivity {
+public class VistaDetalleTipoActivity extends AppCompatActivity {
     private RepositorioTipos tipos;
     private ControladorTipo contTipo;
     private int pos;
     private Tipo tipo;
-    private VistaTipoBinding binding;
+    private VistaTipoDetalleBinding binding;
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        binding = VistaTipoBinding.inflate(getLayoutInflater());
+        binding = VistaTipoDetalleBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot()); // obtiene el layout de la actividad
         Bundle extras = getIntent().getExtras();
         pos = extras.getInt("pos",0);
@@ -35,6 +33,7 @@ public class VistaTipoActivity extends AppCompatActivity {
 
         Toolbar toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         actualizaVistas();
     }
@@ -43,30 +42,23 @@ public class VistaTipoActivity extends AppCompatActivity {
     {
         tipo = tipos.tipo(pos);
         binding.nombre.setText(tipo.getNombre()+" ("+tipo.getOrden()+")");
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.vista_tipo, menu);
-        Log.d("VistaTipoActivity", "Menú inflado correctamente"); // Agregar esta línea
+        getMenuInflater().inflate(R.menu.menu_toolbar_tipo, menu);
         return true;
     }
-/*
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.accion_editar:
-                // Acción para editar
-                return true;
-            case R.id.accion_borrar:
-                // Acción para borrar
+            case android.R.id.home:
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
- */
-
 
 }

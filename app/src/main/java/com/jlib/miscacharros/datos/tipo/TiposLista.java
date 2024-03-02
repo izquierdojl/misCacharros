@@ -1,7 +1,8 @@
-package com.jlib.miscacharros.datos;
+package com.jlib.miscacharros.datos.tipo;
 import com.jlib.miscacharros.modelo.Tipo;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class TiposLista implements RepositorioTipos {
@@ -44,10 +45,20 @@ public class TiposLista implements RepositorioTipos {
         listaTipos.set(id,tipo);
     }
 
+    public void sortPrioridad() {
+        listaTipos.sort( new Comparator<Tipo>() {
+                        public int compare(Tipo tipo1, Tipo tipo2) {
+                            // Comparar por prioridad de manera ascendente
+                            return Integer.compare(tipo2.getPrioridad(), tipo1.getPrioridad());
+            }
+        });
+    }
     public void anadeEjemplos()
     {
-        anade(new Tipo("Cocina",1));
-        anade(new Tipo("Baño",2));
-        anade(new Tipo("Comedor",2));
+        anade(new Tipo("Cocina y Electrodomésticos",4,5));
+        anade(new Tipo("Entretenimiento",1,3));
+        anade(new Tipo("Móviles y Accesorios",2,4));
+        anade(new Tipo("Hogar",2,3));
+        sortPrioridad();
     }
 }

@@ -1,24 +1,59 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="4dp">
+
     <ImageView android:id="@+id/foto"
-        android:layout_width="?android:attr/listPreferredItemHeight"
+        android:layout_width="64dp"
         android:layout_height="?android:attr/listPreferredItemHeight"
+        android:layout_margin="4dp"
         android:contentDescription="fotografía"
         android:src="@drawable/miscaharros"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"/>
-    <TextView android:id="@+id/nombre"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/nombre"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Nombres del lugar"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
         android:maxLines="1"
-        app:layout_constraintTop_toTopOf="parent"
+        android:text="Nombres del lugar"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold"
         app:layout_constraintLeft_toRightOf="@+id/foto"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <RatingBar
+        android:id="@+id/prioridad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:numStars="5"
+        android:stepSize="1"
+        app:layout_constraintLeft_toRightOf="@+id/foto"
+        app:layout_constraintTop_toBottomOf="@id/nombre" />
+
+    <ImageButton
+        android:id="@+id/botonBorrar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@android:drawable/ic_menu_delete"
+        android:background="#00FFFFFF"
+        android:contentDescription="Borrar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/nombre"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

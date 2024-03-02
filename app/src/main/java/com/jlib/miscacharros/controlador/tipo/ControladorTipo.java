@@ -1,12 +1,12 @@
-package com.jlib.miscacharros.controlador;
+package com.jlib.miscacharros.controlador.tipo;
 
 import android.app.Activity;
 import android.content.Intent;
 
-import com.jlib.miscacharros.MainActivity;
-import com.jlib.miscacharros.datos.RepositorioTipos;
-import com.jlib.miscacharros.ui.VistaListaTipoActivity;
-import com.jlib.miscacharros.ui.VistaTipoActivity;
+import com.jlib.miscacharros.datos.tipo.RepositorioTipos;
+import com.jlib.miscacharros.modelo.Tipo;
+import com.jlib.miscacharros.ui.tipo.VistaListaTipoActivity;
+import com.jlib.miscacharros.ui.tipo.VistaDetalleTipoActivity;
 
 public class ControladorTipo
 {
@@ -24,10 +24,9 @@ public class ControladorTipo
         actividad.startActivity(i);
     }
 
-
     public void mostrar(int pos)
     {
-        Intent i = new Intent( actividad, VistaTipoActivity.class );
+        Intent i = new Intent( actividad, VistaDetalleTipoActivity.class );
         i.putExtra("pos", pos);
         actividad.startActivity(i);
     }
@@ -37,6 +36,17 @@ public class ControladorTipo
         tipos.borrar(pos);
         actividad.finish();
     }
+
+    public void nuevo(String nombre, int orden, int prioridad )
+    {
+        if( !nombre.isEmpty() ) {
+            if (orden == 0)
+                orden = 1;
+            Tipo nuevo = new Tipo( nombre , orden , prioridad );
+            tipos.anade(nuevo);
+        }
+    }
+
 
 
 }

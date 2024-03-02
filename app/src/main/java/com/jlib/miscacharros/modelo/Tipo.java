@@ -4,13 +4,15 @@ public class Tipo {
 
     private String nombre;
     private int orden;
+    private int prioridad;
 
     public Tipo() {
     }
 
-    public Tipo(String nombre, int orden) {
+    public Tipo(String nombre, int orden, int prioridad) {
         this.nombre = nombre;
         this.orden = orden;
+        this.prioridad = prioridad;
     }
 
     public String getNombre() {
@@ -27,5 +29,13 @@ public class Tipo {
 
     public void setOrden(int orden) {
         this.orden = orden;
+    }
+
+    public int getPrioridad() {
+        return prioridad;
+    }
+
+    public void setPrioridad(int prioridad) {
+        this.prioridad = prioridad;
     }
 }

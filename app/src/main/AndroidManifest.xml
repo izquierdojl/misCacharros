@@ -21,10 +21,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.jlib.miscacharros.ui.acercadeActivity"
+        <activity android:name="com.jlib.miscacharros.ui.acercade.acercadeActivity"
             android:theme="@style/Theme.AppCompat.Light.Dialog"/>
-        <activity android:name="com.jlib.miscacharros.ui.VistaTipoActivity" />
-        <activity android:name="com.jlib.miscacharros.ui.VistaListaTipoActivity" />
+        <activity android:name="com.jlib.miscacharros.ui.tipo.VistaDetalleTipoActivity" />
+        <activity android:name="com.jlib.miscacharros.ui.tipo.VistaListaTipoActivity" />
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.jlib.miscacharros.datos;
+package com.jlib.miscacharros.datos.tipo;
 
 import com.jlib.miscacharros.modelo.Tipo;
 
@@ -10,4 +10,5 @@ public interface RepositorioTipos {
     int tamano(); // devuelve el tamaño del repositorio o número de elementos
     void actualiza(int id, Tipo tipo); // actualiza un tipo por su posicion
     void anadeEjemplos(); // para pruebas
+    void sortPrioridad();
 }
