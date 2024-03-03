@@ -1,31 +1,27 @@
 package com.jlib.miscacharros.ui.tipo;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.jlib.miscacharros.Aplicacion;
 import com.jlib.miscacharros.R;
-import com.jlib.miscacharros.datos.tipo.RepositorioTipos;
+import com.jlib.miscacharros.controlador.tipo.ControladorTipo;
+import com.jlib.miscacharros.datos.tipo.TiposBDAdapter;
 import com.jlib.miscacharros.modelo.Tipo;
 import com.jlib.miscacharros.databinding.VistaTipoElementoListaBinding;
 
 public class AdaptadorTipos extends
         RecyclerView.Adapter<AdaptadorTipos.ViewHolder> {
-    protected RepositorioTipos tipos;         // Lista de lugares a mostrar
+    //protected TiposBDAdapter tipos;
     private View.OnClickListener onClickListener;
-
-    public AdaptadorTipos(RepositorioTipos tipos)  {
-        this.tipos = tipos;
-    }
+    public ControladorTipo controller;
 
     //Creamos nuestro ViewHolder, con los tipos de elementos a modificar
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -46,6 +42,21 @@ public class AdaptadorTipos extends
             prioridad.setRating(tipo.getPrioridad());
             int id = R.drawable.miscaharros;
             foto.setScaleType(ImageView.ScaleType.FIT_END);
+            switch (tipo.getId())
+            {
+                case 1:
+                    foto.setImageResource(R.drawable.tipo_entretenimiento);
+                    break;
+                case 2:
+                    foto.setImageResource(R.drawable.tipo_cocina);
+                    break;
+                case 3:
+                    foto.setImageResource(R.drawable.tipo_moviles);
+                    break;
+                case 4:
+                    foto.setImageResource(R.drawable.tipo_hogar);
+                    break;
+            }
         }
     }
 
@@ -65,37 +76,26 @@ public class AdaptadorTipos extends
 
     // Usando como base el ViewHolder y lo personalizamos
     @Override
-    public void onBindViewHolder(ViewHolder holder, int posicion) {
-        Tipo tipo = tipos.tipo(posicion);
+    public void onBindViewHolder(ViewHolder holder, int i) {
+        Tipo tipo = controller.getTipos().elemento(i);
         holder.personaliza(tipo);
-
-        holder.prioridad.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                asignaPrioridad(holder,posicion);
-            }
-        });
-
-        holder.botonBorrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteItem(holder,posicion);
-            }
-        });
+        holder.itemView.setTag(i);
     }
     // Indicamos el número de elementos de la lista
+
     @Override public int getItemCount() {
-        return tipos.tamano();
+        return this.getItemCount();
     }
 
-    public void deleteItem(ViewHolder holder, int posicion)  {
+    public void deleteItem(ViewHolder holder, Tipo tipo, int posicion)  {
         AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext());
         builder.setTitle("Confirmación")
                 .setMessage("¿Estás seguro de que quieres borrar el elemento " + holder.nombre.getText() + " ?")
                 .setPositiveButton("Borrar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        tipos.borrar(posicion);
+                        controller.borrar(tipo.getId());
+                        controller.getTipos().getAdaptador().setCursor(controller.getTipos().extraeCursor());
                         notifyItemRemoved(posicion);
                     }
                 })
@@ -106,15 +106,7 @@ public class AdaptadorTipos extends
                     }
                 })
                 .show();
-
     }
 
-    public void asignaPrioridad(ViewHolder holder, int posicion){
-        float rating = holder.prioridad.getRating();
-        Tipo tipo = tipos.tipo(posicion);
-        tipo.setPrioridad((int) rating);
-        tipos.sortPrioridad();
-        notifyDataSetChanged();
-    }
 }
 

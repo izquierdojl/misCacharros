@@ -2,8 +2,7 @@ package com.jlib.miscacharros.controlador.tipo;
 
 import android.app.Activity;
 import android.content.Intent;
-
-import com.jlib.miscacharros.datos.tipo.RepositorioTipos;
+import com.jlib.miscacharros.datos.tipo.TiposBDAdapter;
 import com.jlib.miscacharros.modelo.Tipo;
 import com.jlib.miscacharros.ui.tipo.VistaListaTipoActivity;
 import com.jlib.miscacharros.ui.tipo.VistaDetalleTipoActivity;
@@ -11,10 +10,27 @@ import com.jlib.miscacharros.ui.tipo.VistaDetalleTipoActivity;
 public class ControladorTipo
 {
     private Activity actividad;
-    private RepositorioTipos tipos;
+    //private RepositorioTipos tipos;
+    private TiposBDAdapter tipos;
 
-    public ControladorTipo(Activity actividad, RepositorioTipos tipos) {
+    public ControladorTipo(Activity actividad, TiposBDAdapter tipos) {
         this.actividad = actividad;
+        this.tipos = tipos;
+    }
+
+    public Activity getActividad() {
+        return actividad;
+    }
+
+    public void setActividad(Activity actividad) {
+        this.actividad = actividad;
+    }
+
+    public TiposBDAdapter getTipos() {
+        return tipos;
+    }
+
+    public void setTipos(TiposBDAdapter tipos) {
         this.tipos = tipos;
     }
 
@@ -34,19 +50,11 @@ public class ControladorTipo
     public void borrar(int pos)
     {
         tipos.borrar(pos);
-        actividad.finish();
     }
 
-    public void nuevo(String nombre, int orden, int prioridad )
+    public void nuevo(Tipo tipo)
     {
-        if( !nombre.isEmpty() ) {
-            if (orden == 0)
-                orden = 1;
-            Tipo nuevo = new Tipo( nombre , orden , prioridad );
-            tipos.anade(nuevo);
-        }
+        tipos.anade(tipo);
     }
-
-
 
 }

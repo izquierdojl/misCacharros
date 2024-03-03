@@ -3,15 +3,15 @@ package com.jlib.miscacharros.modelo;
 public class Tipo {
 
     private String nombre;
-    private int orden;
+    private int id;
     private int prioridad;
 
     public Tipo() {
     }
 
-    public Tipo(String nombre, int orden, int prioridad) {
+    public Tipo(String nombre, int id, int prioridad) {
         this.nombre = nombre;
-        this.orden = orden;
+        this.id = id;
         this.prioridad = prioridad;
     }
 
@@ -23,12 +23,12 @@ public class Tipo {
         this.nombre = nombre;
     }
 
-    public int getOrden() {
-        return orden;
+    public int getId() {
+        return id;
     }
 
-    public void setOrden(int orden) {
-        this.orden = orden;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getPrioridad() {

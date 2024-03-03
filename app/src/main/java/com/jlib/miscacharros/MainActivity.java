@@ -5,10 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
 import com.google.android.material.tabs.TabLayout;
 import com.jlib.miscacharros.controlador.tipo.ControladorTipo;
-import com.jlib.miscacharros.datos.tipo.RepositorioTipos;
 import com.jlib.miscacharros.ui.acercade.acercadeActivity;
 import com.jlib.miscacharros.databinding.ActivityMainBinding;
 
@@ -16,9 +14,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TabLayout tabs;
     private ActivityMainBinding binding;
-
-    private RepositorioTipos tipos;
-    private ControladorTipo contTipo;
+    private ControladorTipo controladorTipo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +30,16 @@ public class MainActivity extends AppCompatActivity {
         tabs.addTab(tabs.newTab().setText("Lugares"));
         tabs.addTab(tabs.newTab().setText("Acerca de ..."));
 
-        tipos = ((Aplicacion) getApplication()).tipos ;
-        tipos.anadeEjemplos();
+        controladorTipo = ((Aplicacion) getApplication()).getControllerTipo();
+        controladorTipo.setActividad(this);
 
-        contTipo = new ControladorTipo(this, tipos);
+
+        //tipos = ((Aplicacion) getApplication()).tipos ;
+        //if( tipos.tamano() == 0 )
+        //   tipos.anadeEjemplos();
+        //controllerTipo.setTipos(tipos);
+
+
 
         /// aquí dibujaremos en un futuro la pantalla principal
 
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 //contTipo.mostrar(0); // con esto se mostraría directamente
 
-                contTipo.listar();
+                controladorTipo.listar();
 
                 // muy interesante, cuadro de selección para pedir un dato
                 /*

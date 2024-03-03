@@ -2,6 +2,7 @@ package com.jlib.miscacharros.ui.tipo;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,21 +16,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jlib.miscacharros.Aplicacion;
 import com.jlib.miscacharros.R;
-import com.jlib.miscacharros.controlador.tipo.ControladorTipo;
 import com.jlib.miscacharros.databinding.VistaTipoListaBinding;
+import com.jlib.miscacharros.modelo.Tipo;
 
 public class VistaListaTipoActivity extends AppCompatActivity{
 
-    public AdaptadorTipos adaptador;
+    public AdaptadorTiposBD adaptador;
     private VistaTipoListaBinding binding;
-    private ControladorTipo contTipo;
     private Toolbar barra;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        adaptador = ((Aplicacion) getApplication()).adaptador;
-        contTipo = new ControladorTipo(this, adaptador.tipos);
+        adaptador = ((Aplicacion) getApplication()).getControllerTipo().getTipos().getAdaptador();
+        //contTipo = new ControladorTipo(this,adaptador );
 
         binding = VistaTipoListaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot()); // obtiene el layout de la actividad
@@ -50,7 +50,8 @@ public class VistaListaTipoActivity extends AppCompatActivity{
                 int pos= binding.recyclerView.getChildAdapterPosition(v);
                 contTipo.mostrar(pos);
             }
-        });*/
+        });
+         */
 
     }
 
@@ -83,12 +84,17 @@ public class VistaListaTipoActivity extends AppCompatActivity{
         entrada.setText("");
         new AlertDialog.Builder(this)
                 .setTitle("Nuevo tipo")
-                .setMessage("indica su nombre:")
+                .setMessage("Indica su nombre:")
                 .setView(entrada)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        contTipo.nuevo(entrada.getText().toString(),0,1);
-                        adaptador.notifyDataSetChanged();
+                        Tipo tipo = new Tipo();
+                        tipo.setNombre(entrada.getText().toString());
+                        tipo.setPrioridad(1);
+                        adaptador.controller.nuevo(tipo);
+                        Cursor cursorAsigna = adaptador.controller.getTipos().extraeCursor();
+                        adaptador.setCursor(cursorAsigna);
+                        adaptador.notifyItemInserted(adaptador.getItemCount());
                     }})
                 .setNegativeButton("Cancelar", null)
                 .show();

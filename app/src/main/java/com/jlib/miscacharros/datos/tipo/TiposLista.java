@@ -14,20 +14,13 @@ public class TiposLista implements RepositorioTipos {
     }
 
     @Override
-    public Tipo tipo(int id) {
+    public Tipo elemento(int id) {
         return listaTipos.get(id);
     }
 
     @Override
     public void anade(Tipo tipo) {
         listaTipos.add(tipo);
-    }
-
-    @Override
-    public int nuevo() {
-        Tipo tipo=new Tipo();
-        listaTipos.add(tipo);
-        return listaTipos.size();
     }
 
     @Override
@@ -48,17 +41,17 @@ public class TiposLista implements RepositorioTipos {
     public void sortPrioridad() {
         listaTipos.sort( new Comparator<Tipo>() {
                         public int compare(Tipo tipo1, Tipo tipo2) {
-                            // Comparar por prioridad de manera ascendente
                             return Integer.compare(tipo2.getPrioridad(), tipo1.getPrioridad());
             }
         });
     }
     public void anadeEjemplos()
     {
-        anade(new Tipo("Cocina y Electrodomésticos",4,5));
-        anade(new Tipo("Entretenimiento",1,3));
-        anade(new Tipo("Móviles y Accesorios",2,4));
-        anade(new Tipo("Hogar",2,3));
+        anade(new Tipo("Cocina y Electrodomésticos",1,3));
+        anade(new Tipo("Entretenimiento",2,5));
+        anade(new Tipo("Móviles y Accesorios",3,4));
+        anade(new Tipo("Hogar",4,2));
+        anade(new Tipo("Varios",5,1));
         sortPrioridad();
     }
 }

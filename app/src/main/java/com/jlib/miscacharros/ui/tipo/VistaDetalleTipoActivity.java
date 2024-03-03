@@ -11,11 +11,12 @@ import com.jlib.miscacharros.Aplicacion;
 import com.jlib.miscacharros.R;
 import com.jlib.miscacharros.controlador.tipo.ControladorTipo;
 import com.jlib.miscacharros.datos.tipo.RepositorioTipos;
+import com.jlib.miscacharros.datos.tipo.TiposBDAdapter;
 import com.jlib.miscacharros.modelo.Tipo;
 import com.jlib.miscacharros.databinding.VistaTipoDetalleBinding;
 
 public class VistaDetalleTipoActivity extends AppCompatActivity {
-    private RepositorioTipos tipos;
+    private TiposBDAdapter tipos;
     private ControladorTipo contTipo;
     private int pos;
     private Tipo tipo;
@@ -27,9 +28,10 @@ public class VistaDetalleTipoActivity extends AppCompatActivity {
         setContentView(binding.getRoot()); // obtiene el layout de la actividad
         Bundle extras = getIntent().getExtras();
         pos = extras.getInt("pos",0);
-        tipos = ((Aplicacion) getApplication()).tipos;
-        contTipo = new ControladorTipo(this, tipos); // creamos el objeto controlador
-        tipo = tipos.tipo(pos);
+        //contTipo = new ControladorTipo(this, tipos); // creamos el objeto controlador
+        //tipos = ((Aplicacion) getApplication()).tipos;
+        //tipo = tipos.tipo(pos);
+        tipo = tipos.elementoPos(pos);
 
         Toolbar toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
@@ -40,8 +42,9 @@ public class VistaDetalleTipoActivity extends AppCompatActivity {
 
     public void actualizaVistas()
     {
-        tipo = tipos.tipo(pos);
-        binding.nombre.setText(tipo.getNombre()+" ("+tipo.getOrden()+")");
+        //tipo = tipos.tipo(pos);
+        tipo = tipos.elementoPos(pos);
+        binding.nombre.setText(tipo.getNombre()+" ("+tipo.getId()+")");
     }
 
     @Override
