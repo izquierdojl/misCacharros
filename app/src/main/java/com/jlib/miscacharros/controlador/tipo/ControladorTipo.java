@@ -57,4 +57,9 @@ public class ControladorTipo
         tipos.anade(tipo);
     }
 
+    public void ejemplos()
+    {
+        tipos.anadeEjemplos();
+    }
+
 }

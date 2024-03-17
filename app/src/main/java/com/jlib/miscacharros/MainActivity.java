@@ -27,11 +27,12 @@ public class MainActivity extends AppCompatActivity {
         // creamos las tabs
         tabs.addTab(tabs.newTab().setText("Cacharros"));
         tabs.addTab(tabs.newTab().setText("Categorías"));
-        tabs.addTab(tabs.newTab().setText("Lugares"));
+        tabs.addTab(tabs.newTab().setText("Contactos"));
         tabs.addTab(tabs.newTab().setText("Acerca de ..."));
 
         controladorTipo = ((Aplicacion) getApplication()).getControllerTipo();
         controladorTipo.setActividad(this);
+
 
 
         //tipos = ((Aplicacion) getApplication()).tipos ;
@@ -39,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
         //   tipos.anadeEjemplos();
         //controllerTipo.setTipos(tipos);
 
-
+        //if( controladorTipo.getTipos().tamano() == 0 )
+        //    controladorTipo.ejemplos();
 
         /// aquí dibujaremos en un futuro la pantalla principal
 
