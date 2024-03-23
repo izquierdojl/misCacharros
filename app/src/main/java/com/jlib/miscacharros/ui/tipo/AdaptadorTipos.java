@@ -10,10 +10,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jlib.miscacharros.Aplicacion;
 import com.jlib.miscacharros.R;
 import com.jlib.miscacharros.controlador.tipo.ControladorTipo;
-import com.jlib.miscacharros.datos.tipo.TiposBDAdapter;
 import com.jlib.miscacharros.modelo.Tipo;
 import com.jlib.miscacharros.databinding.VistaTipoElementoListaBinding;
 

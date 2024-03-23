@@ -1,4 +1,4 @@
-package com.jlib.miscacharros.datos.tipo;
+package com.jlib.miscacharros.datos.contacto;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -7,13 +7,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.jlib.miscacharros.modelo.Tipo;
+import com.jlib.miscacharros.modelo.Contacto;
 
-public class TiposBD extends SQLiteOpenHelper implements RepositorioTipos {
+public class ContactosBD extends SQLiteOpenHelper implements RepositorioContactos {
 
     Context contexto;
 
-    public TiposBD(Context context) {
+    public ContactosBD(Context context) {
         super(context, "misCacharros", null, 1);
         this.contexto = contexto;
     }
@@ -21,10 +21,19 @@ public class TiposBD extends SQLiteOpenHelper implements RepositorioTipos {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String sql = "CREATE TABLE tipo("
+        String sql = "CREATE TABLE contacto("
                 + " id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + " nombre TEXT, "
-                + " prioridad INTEGER )";
+                + " name TEXT, "
+                + " address TEXT, "
+                + " postalCode TEXT, "
+                + " city TEXT, "
+                + " state TEXT, "
+                + " country TEXT, "
+                + " telef TEXT, "
+                + " email TEXT, "
+                + " web TEXT, "
+                + " latitud DOUBLE, "
+                + " longitud DOUBLE ) ";
         db.execSQL(sql);
 
     }
@@ -35,27 +44,27 @@ public class TiposBD extends SQLiteOpenHelper implements RepositorioTipos {
         // aquí irían los alter table en caso de modificar la tabla, por ejemplo, para una nueva versión
     }
 
-    public static Tipo extraeTipo(Cursor cursor) {
-        Tipo tipo = new Tipo();
-        tipo.setId(cursor.getInt(0));
-        tipo.setNombre(cursor.getString(1));
-        tipo.setPrioridad(cursor.getInt(2));
-        return tipo;
+    public static Contacto extraeContacto(Cursor cursor) {
+        Contacto contacto = new Contacto();
+        contacto.setId(cursor.getInt(0));
+        contacto.setName(cursor.getString(1));
+        contacto.setAddress(cursor.getString(2));
+        return contacto;
     }
 
     public Cursor extraeCursor() {
-        String sql = "SELECT * FROM tipo ORDER BY prioridad DESC";
+        String sql = "SELECT * FROM contacto ORDER BY id";
         SQLiteDatabase db = getReadableDatabase();
         return db.rawQuery(sql, null);
     }
 
     @Override
-    public Tipo elemento(int id) {
-        String sql = "SELECT * FROM tipos WHERE id=" + id;
+    public Contacto elemento(int id) {
+        String sql = "SELECT * FROM contactos WHERE id=" + id;
         Cursor cursor = getReadableDatabase().rawQuery(sql, null);
         try {
             if (cursor.moveToNext())
-                return extraeTipo(cursor);
+                return extraeContacto(cursor);
             else
                 throw new SQLException("Error al acceder al elemento id" + id);
         } catch (Exception e) {
@@ -67,8 +76,8 @@ public class TiposBD extends SQLiteOpenHelper implements RepositorioTipos {
     }
 
     @Override
-    public void anade(Tipo tipo) {
-        String sql = "INSERT INTO tipo (nombre,prioridad) VALUES ('" + tipo.getNombre() + "'," + tipo.getPrioridad() + ")";
+    public void anade(Contacto contacto) {
+        String sql = "INSERT INTO contacto (nombre,address) VALUES ('" + contacto.getName() + "'," + contacto.getAddress() + ")";
         getWritableDatabase().execSQL(sql);
     }
 
@@ -96,10 +105,10 @@ public class TiposBD extends SQLiteOpenHelper implements RepositorioTipos {
     }
 
     @Override
-    public void actualiza(int id, Tipo tipo) {
+    public void actualiza(int id, Contacto contacto) {
         String sql = "UPDATE tipo SET "
-                + " nombre= '" + tipo.getNombre() + "', "
-                + " prioridad= " + tipo.getPrioridad()
+                + " nombre= '" + contacto.getName() + "', "
+                + " address= " + contacto.getAddress() + "' "
                 + " WHERE id = " + id ;
         getWritableDatabase().execSQL(sql);
     }
@@ -118,11 +127,11 @@ public class TiposBD extends SQLiteOpenHelper implements RepositorioTipos {
     public void limpia()
     {
         //String sql = "DROP TABLE tipo  ";
-        String sql = "DELETE FROM tipo  ";
+        String sql = "DELETE FROM contactos  ";
         getWritableDatabase().execSQL(sql);
     }
 
     @Override
-    public void sortPrioridad() {
+    public void sortName() {
     }
 }

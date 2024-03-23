@@ -1,12 +1,9 @@
 package com.jlib.miscacharros.ui.tipo;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.view.View;
 import android.widget.RatingBar;
 
-import com.jlib.miscacharros.datos.tipo.RepositorioTipos;
 import com.jlib.miscacharros.datos.tipo.TiposBD;
 import com.jlib.miscacharros.datos.tipo.TiposBDAdapter;
 import com.jlib.miscacharros.modelo.Tipo;

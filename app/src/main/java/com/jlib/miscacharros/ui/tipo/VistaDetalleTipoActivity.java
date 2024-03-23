@@ -7,10 +7,8 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.jlib.miscacharros.Aplicacion;
 import com.jlib.miscacharros.R;
 import com.jlib.miscacharros.controlador.tipo.ControladorTipo;
-import com.jlib.miscacharros.datos.tipo.RepositorioTipos;
 import com.jlib.miscacharros.datos.tipo.TiposBDAdapter;
 import com.jlib.miscacharros.modelo.Tipo;
 import com.jlib.miscacharros.databinding.VistaTipoDetalleBinding;
