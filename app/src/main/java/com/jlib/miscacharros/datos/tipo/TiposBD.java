@@ -7,32 +7,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.jlib.miscacharros.datos.generalBD;
 import com.jlib.miscacharros.modelo.Tipo;
 
-public class TiposBD extends SQLiteOpenHelper implements RepositorioTipos {
+public class TiposBD extends generalBD implements RepositorioTipos {
 
     Context contexto;
 
     public TiposBD(Context context) {
-        super(context, "misCacharros", null, 1);
-        this.contexto = contexto;
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-
-        String sql = "CREATE TABLE tipo("
-                + " id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + " nombre TEXT, "
-                + " prioridad INTEGER )";
-        db.execSQL(sql);
-
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-        // aquí irían los alter table en caso de modificar la tabla, por ejemplo, para una nueva versión
+        super(context);
     }
 
     public static Tipo extraeTipo(Cursor cursor) {

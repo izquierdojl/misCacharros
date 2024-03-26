@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import com.google.android.material.tabs.TabLayout;
+import com.jlib.miscacharros.controlador.contacto.ControladorContacto;
 import com.jlib.miscacharros.controlador.tipo.ControladorTipo;
 import com.jlib.miscacharros.ui.acercade.acercadeActivity;
 import com.jlib.miscacharros.databinding.ActivityMainBinding;
@@ -15,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabs;
     private ActivityMainBinding binding;
     private ControladorTipo controladorTipo;
+    private ControladorContacto controladorContacto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,19 +34,15 @@ public class MainActivity extends AppCompatActivity {
 
         controladorTipo = ((Aplicacion) getApplication()).getControllerTipo();
         controladorTipo.setActividad(this);
+        controladorContacto = ((Aplicacion) getApplication()).getControllerContacto();
+        controladorContacto.setActividad(this);
 
 
+        if( controladorTipo.getTipos().tamano() == 0 )
+            controladorTipo.ejemplos();
 
-        //tipos = ((Aplicacion) getApplication()).tipos ;
-        //if( tipos.tamano() == 0 )
-        //   tipos.anadeEjemplos();
-        //controllerTipo.setTipos(tipos);
-
-        //if( controladorTipo.getTipos().tamano() == 0 )
-        //    controladorTipo.ejemplos();
-
-        /// aquí dibujaremos en un futuro la pantalla principal
-
+        if( controladorContacto.getContactos().tamano() == 0 )
+            controladorContacto.ejemplos();
 
         /// acciones al pulsar sobre el tab
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -54,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
                 {
                     case 1:
                         lanzarVistaTipo(null);
+                        break;
+                    case 2:
+                        lanzarVistaContactos(null);
                         break;
                     case 3: // acerca de...
                         lanzarAcercaDe(null);
@@ -73,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
             public void lanzarAcercaDe(View view) {
                 Intent i = new Intent(MainActivity.this, acercadeActivity.class);
                 startActivity(i);
+            }
+
+            public void lanzarVistaContactos( View view )
+            {
+                controladorContacto.listar();
             }
 
             public void lanzarVistaTipo(View view)

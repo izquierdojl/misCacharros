@@ -2,6 +2,9 @@ package com.jlib.miscacharros.datos.contacto;
 
 import android.content.Context;
 
+import com.jlib.miscacharros.modelo.Contacto;
+import com.jlib.miscacharros.ui.contacto.AdaptadorContactosBD;
+
 public class ContactosBDAdapter extends ContactosBD {
 
     private AdaptadorContactosBD adaptador;
@@ -10,11 +13,7 @@ public class ContactosBDAdapter extends ContactosBD {
         super(context);
     }
 
-    public AdaptadorContactosBD adaptador() {
-        return adaptador;
-    }
-
-    getAdaptador() {
+    public AdaptadorContactosBD getAdaptador() {
         return adaptador;
     }
 
@@ -22,7 +21,8 @@ public class ContactosBDAdapter extends ContactosBD {
         this.adaptador = adaptador;
     }
 
-    public Contacto elementoPos( int pos ){
+    public Contacto elementoPos(int pos )
+    {
         return adaptador.contactoPosicion(pos);
     }
 

@@ -25,6 +25,8 @@
             android:theme="@style/Theme.AppCompat.Light.Dialog"/>
         <activity android:name="com.jlib.miscacharros.ui.tipo.VistaDetalleTipoActivity" />
         <activity android:name="com.jlib.miscacharros.ui.tipo.VistaListaTipoActivity" />
+        <activity android:name="com.jlib.miscacharros.ui.contacto.VistaDetalleContactoActivity" />
+        <activity android:name="com.jlib.miscacharros.ui.contacto.VistaListaContactoActivity" />
     </application>
 
 </manifest>
