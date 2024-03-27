@@ -4,5 +4,6 @@
    <item
         android:id="@+id/action_nuevo_contacto"
         android:title="Añadir Contacto"
-        app:showAsAction="ifRoom" />
+        android:icon="@android:drawable/ic_menu_add"
+        app:showAsAction="always|withText" />
 </menu>
