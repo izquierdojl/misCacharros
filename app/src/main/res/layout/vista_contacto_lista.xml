@@ -15,6 +15,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="Contactos" />
 
+    <EditText
+        android:id="@+id/edit_text_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Buscar..."
+        android:inputType="text"
+        />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"

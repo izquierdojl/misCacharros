@@ -20,7 +20,7 @@ public class Contacto
 
     public Contacto()
     {
-
+        this.geopunto = new GeoPunto();
     }
 
     public Contacto(int id, String name, String address, String postalCode, String city, String state, String country, String telephone, String email, String web, GeoPunto geopunto) {

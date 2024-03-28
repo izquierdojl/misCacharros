@@ -2,9 +2,10 @@ package com.jlib.miscacharros.ui.contacto;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,18 +21,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.jlib.miscacharros.Aplicacion;
 import com.jlib.miscacharros.R;
 import com.jlib.miscacharros.controlador.contacto.ControladorContacto;
-import com.jlib.miscacharros.databinding.ActivityMainBinding;
 import com.jlib.miscacharros.databinding.VistaContactoDetalleBinding;
 import com.jlib.miscacharros.databinding.VistaContactoListaBinding;
 import com.jlib.miscacharros.modelo.Contacto;
-import com.jlib.miscacharros.modelo.Tipo;
+
+import java.util.Locale;
 
 public class VistaListaContactoActivity extends AppCompatActivity{
 
     public AdaptadorContactosBD adaptador;
     private VistaContactoListaBinding binding;
     private Toolbar barra;
-    private ControladorContacto controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -48,6 +48,22 @@ public class VistaListaContactoActivity extends AppCompatActivity{
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adaptador);
+
+        EditText editTextSearch = binding.editTextSearch;
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String searchTerm = s.toString().toLowerCase(Locale.getDefault());
+                Cursor newCursor = adaptador.controller.getContactos().extraeCursorFiltrado(searchTerm);
+                adaptador.setCursor(newCursor);
+                recyclerView.getAdapter().notifyDataSetChanged();
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+        });
 
         adaptador.setOnItemClickListener(new View.OnClickListener() {
             @Override
@@ -108,7 +124,7 @@ public class VistaListaContactoActivity extends AppCompatActivity{
                 contacto.setWeb(binding.editTextWeb.getText().toString());
                 if (modo == 1) {
                     adaptador.controller.anade(contacto);
-                    adaptador.setCursor(controller.contactos().extraeCursor());
+                    adaptador.setCursor(adaptador.controller.contactos().extraeCursor());
                     recyclerView.getAdapter().notifyDataSetChanged();
                     //recyclerView.getAdapter().notifyItemInserted(adaptador.getItemCount() - 1);
                 }

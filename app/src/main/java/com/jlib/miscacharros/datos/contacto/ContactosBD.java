@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.jlib.miscacharros.datos.generalBD;
 import com.jlib.miscacharros.modelo.Contacto;
+import com.jlib.miscacharros.modelo.GeoPunto;
 
 public class ContactosBD extends generalBD implements RepositorioContactos {
 
@@ -24,11 +25,19 @@ public class ContactosBD extends generalBD implements RepositorioContactos {
         contacto.setId(cursor.getInt(0));
         contacto.setName(cursor.getString(1));
         contacto.setAddress(cursor.getString(2));
+        contacto.setPostalCode(cursor.getString(3));
+        contacto.setCity(cursor.getString(4));
+        contacto.setState(cursor.getString(5));
+        contacto.setCountry(cursor.getString(6));
+        contacto.setTelephone(cursor.getString(7));
+        contacto.setEmail(cursor.getString(8));
+        contacto.setWeb(cursor.getString(9));
+        contacto.setGeopunto(new GeoPunto(cursor.getDouble(10),cursor.getDouble(11)));
         return contacto;
     }
 
     public Cursor extraeCursor() {
-        String sql = "SELECT * FROM contacto ORDER BY id";
+        String sql = "SELECT * FROM contacto ORDER BY name";
         SQLiteDatabase db = getReadableDatabase();
         return db.rawQuery(sql, null);
     }
@@ -61,6 +70,8 @@ public class ContactosBD extends generalBD implements RepositorioContactos {
         values.put("telef",contacto.getTelephone());
         values.put("web",contacto.getWeb());
         values.put("email",contacto.getEmail());
+        values.put("latitud",contacto.getGeopunto().getLatitud());
+        values.put("longitud",contacto.getGeopunto().getLongitud());
         db.insert("contacto",null,values);
         db.close();
     }
@@ -97,6 +108,8 @@ public class ContactosBD extends generalBD implements RepositorioContactos {
         values.put("telef",contacto.getTelephone());
         values.put("web",contacto.getWeb());
         values.put("email",contacto.getEmail());
+        values.put("latitud",contacto.getGeopunto().getLatitud());
+        values.put("longitud",contacto.getGeopunto().getLongitud());
         db.update("contacto", values, "id = ?", new String[]{String.valueOf(id)});
         db.close();
     }
@@ -113,6 +126,14 @@ public class ContactosBD extends generalBD implements RepositorioContactos {
         //String sql = "DROP TABLE tipo  ";
         String sql = "DELETE FROM contacto  ";
         getWritableDatabase().execSQL(sql);
+    }
+
+    // Método para filtrar datos según el término de búsqueda
+
+    public Cursor extraeCursorFiltrado(String searchTerm) {
+        String sql = "SELECT * FROM contacto WHERE name LIKE '%" + searchTerm + "%' or address LIKE '%\" + searchTerm + \"%'  ORDER BY name";
+        SQLiteDatabase db = getReadableDatabase();
+        return db.rawQuery(sql, null);
     }
 
     @Override

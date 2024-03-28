@@ -1,8 +1,12 @@
 package com.jlib.miscacharros.ui.contacto;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +23,8 @@ import com.jlib.miscacharros.controlador.contacto.ControladorContacto;
 import com.jlib.miscacharros.databinding.VistaContactoElementoListaBinding;
 import com.jlib.miscacharros.modelo.Contacto;
 
+import org.w3c.dom.Text;
+
 import javax.xml.namespace.QName;
 
 public class AdaptadorContactos extends
@@ -29,26 +35,53 @@ public class AdaptadorContactos extends
 
     //Creamos nuestro ViewHolder, con los elementos a modificar
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView name;
-        public TextView id;
-        public ImageView foto;
-        public ImageButton botonBorrar;
-        public ImageButton botonEditar;
+        private TextView name;
+        private TextView id;
+        private TextView web;
+        private ImageView foto;
+        protected ImageButton botonBorrar;
+        protected ImageButton botonEditar;
+        protected ImageButton botonCall;
+        protected ImageButton botonLocation;
         public ViewHolder(VistaContactoElementoListaBinding itemView) {
             super(itemView.getRoot());
             name = itemView.name;
             id = itemView.IdContacto;
+            web = itemView.web;
             botonBorrar = itemView.botonBorrar;
             botonEditar = itemView.botonEditar;
+            botonCall = itemView.botonCall;
+            botonLocation = itemView.botonLocation;
         }
         // Personalizamos un ViewHolder a partir de un tipo
         public void personaliza(Contacto contacto) {
             name.setText(contacto.getName());
+            web.setText(contacto.getWeb());
             id.setText(String.valueOf(contacto.getId()));
-            //int id = R.drawable.miscaharros;
-            //foto.setScaleType(ImageView.ScaleType.FIT_END);
-            //foto.setImageResource();
+            if( contacto.getTelephone().isEmpty()) {
+                botonCall.setVisibility(View.GONE);
+            }else{
+                botonCall.setVisibility(View.VISIBLE);
+                botonCall.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        doCall(itemView,contacto);
+                    }
+                });
+            }
+            if( contacto.getGeopunto().isEmpty() && contacto.getAddress().isEmpty() )
+                botonLocation.setVisibility(View.GONE);
+            else{
+                botonLocation.setVisibility(View.VISIBLE);
+                botonLocation.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        doNavigate(itemView,contacto);
+                    }
+                });
+            }
         }
+
     }
 
     public void setOnItemClickListener(View.OnClickListener onClickListener) {
@@ -103,5 +136,38 @@ public class AdaptadorContactos extends
         controller.mostrar(contacto.getId(),posicion);
 
     }
+
+    public static void doCall(View view, Contacto contacto)
+    {
+        if( contacto != null && !contacto.getTelephone().isEmpty() ) {
+            String phoneNumber = contacto.getTelephone();
+            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
+            Context context = view.getContext();
+            context.startActivity(intent);
+        }
+    }
+
+    public static void doNavigate( View view, Contacto contacto )
+    {
+        if( contacto != null ) {
+            Uri uri;
+            if( contacto.getGeopunto().isEmpty() )
+            {
+                if( !contacto.getAddress().isEmpty())
+                    uri = Uri.parse("geo:0,0?q=" + contacto.getAddress() );
+                else
+                    uri = Uri.parse("geo:0,0?q=" + contacto.getName() );
+            }else{
+                double lat = contacto.getGeopunto().getLatitud();
+                double lon = contacto.getGeopunto().getLongitud();
+                uri = Uri.parse("geo:" + lat + "," + lon +"?q=" + lat + "," + lon+"(prueba)");
+
+            }
+            Intent intent = new Intent("android.intent.action.VIEW", uri);
+            Context context = view.getContext();
+            context.startActivity(intent);
+        }
+    }
+
 }
 
