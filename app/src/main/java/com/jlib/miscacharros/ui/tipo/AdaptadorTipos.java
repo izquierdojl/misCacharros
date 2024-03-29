@@ -15,6 +15,8 @@ import com.jlib.miscacharros.controlador.tipo.ControladorTipo;
 import com.jlib.miscacharros.modelo.Tipo;
 import com.jlib.miscacharros.databinding.VistaTipoElementoListaBinding;
 
+import yuku.ambilwarna.AmbilWarnaDialog;
+
 public class AdaptadorTipos extends
         RecyclerView.Adapter<AdaptadorTipos.ViewHolder> {
     //protected TiposBDAdapter tipos;
@@ -26,6 +28,7 @@ public class AdaptadorTipos extends
         public TextView nombre;
         public ImageView foto;
         public ImageButton botonBorrar;
+        public ImageButton botonColor;
         public RatingBar prioridad;
         public ViewHolder(VistaTipoElementoListaBinding itemView) {
             super(itemView.getRoot());
@@ -33,13 +36,17 @@ public class AdaptadorTipos extends
             foto = itemView.foto;
             prioridad = itemView.prioridad;
             botonBorrar = itemView.botonBorrar;
+            botonColor = itemView.botonColor;
         }
         // Personalizamos un ViewHolder a partir de un tipo
-        public void personaliza(Tipo tipo) {
+        public void personaliza(Tipo tipo,ViewHolder holder) {
             nombre.setText(tipo.getNombre());
             prioridad.setRating(tipo.getPrioridad());
             int id = R.drawable.miscaharros;
             foto.setScaleType(ImageView.ScaleType.FIT_END);
+            if( tipo.getColor()!= 0 )
+                holder.itemView.setBackgroundColor(tipo.getColor());
+
             switch (tipo.getId())
             {
                 case 1:
@@ -55,6 +62,7 @@ public class AdaptadorTipos extends
                     foto.setImageResource(R.drawable.tipo_hogar);
                     break;
             }
+
 
         }
     }
@@ -77,7 +85,7 @@ public class AdaptadorTipos extends
     @Override
     public void onBindViewHolder(ViewHolder holder, int i) {
         Tipo tipo = controller.getTipos().elemento(i);
-        holder.personaliza(tipo);
+        holder.personaliza(tipo,holder);
         holder.itemView.setTag(i);
     }
     // Indicamos el número de elementos de la lista
@@ -105,6 +113,39 @@ public class AdaptadorTipos extends
                     }
                 })
                 .show();
+    }
+
+    public void selectorColor(ViewHolder holder, Tipo tipo, int posicion){
+        // the AmbilWarnaDialog callback needs 3 parameters
+        // one is the context, second is default color,
+        final AmbilWarnaDialog colorPickerDialogue = new AmbilWarnaDialog(holder.itemView.getContext(), 0,
+                new AmbilWarnaDialog.OnAmbilWarnaListener() {
+                    @Override
+                    public void onCancel(AmbilWarnaDialog dialog) {
+                        // leave this function body as
+                        // blank, as the dialog
+                        // automatically closes when
+                        // clicked on cancel button
+                    }
+
+                    @Override
+                    public void onOk(AmbilWarnaDialog dialog, int color) {
+                        // change the mDefaultColor to
+                        // change the GFG text color as
+                        // it is returned when the OK
+                        // button is clicked from the
+                        // color picker dialog
+                        //mDefaultColor = color;
+                        // now change the picked color
+                        // preview box to mDefaultColor
+                        //mColorPreview.setBackgroundColor(mDefaultColor);
+                        tipo.setColor(color);
+                        controller.actualiza(tipo.getId(), tipo);
+                        controller.getTipos().getAdaptador().setCursor(controller.getTipos().extraeCursor());
+                        notifyItemChanged(posicion);
+                    }
+                });
+        colorPickerDialogue.show();
     }
 
 }

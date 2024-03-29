@@ -16,7 +16,8 @@ public class generalBD extends SQLiteOpenHelper {
        String sql = "CREATE TABLE tipo("
                 + " id INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + " nombre TEXT, "
-                + " prioridad INTEGER )";
+                + " prioridad INTEGER, "
+                + " color INTEGER )";
        db.execSQL(sql);
 
        sql = "CREATE TABLE contacto("
@@ -32,6 +33,7 @@ public class generalBD extends SQLiteOpenHelper {
                 + " web TEXT, "
                 + " latitud DOUBLE, "
                 + " longitud DOUBLE ) ";
+
        db.execSQL(sql);
 
     }

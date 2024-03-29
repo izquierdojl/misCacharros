@@ -1,7 +1,9 @@
 package com.jlib.miscacharros.controlador.contacto;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Parcelable;
 import android.util.Log;
 
@@ -85,6 +87,5 @@ public class ControladorContacto
     {
         contactos.anadeEjemplos();
     }
-
 
 }

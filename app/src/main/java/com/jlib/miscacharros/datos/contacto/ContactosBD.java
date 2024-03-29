@@ -117,8 +117,8 @@ public class ContactosBD extends generalBD implements RepositorioContactos {
     @Override
     public void anadeEjemplos()
     {
-        getWritableDatabase().execSQL( "INSERT INTO contacto (id,name) VALUES (1,'Contacto 1' )" );
-        getWritableDatabase().execSQL( "INSERT INTO contacto (id,name) VALUES (2,'Establecimiento' )" );
+        //getWritableDatabase().execSQL( "INSERT INTO contacto (id,name) VALUES (1,'Contacto 1' )" );
+        //getWritableDatabase().execSQL( "INSERT INTO contacto (id,name) VALUES (2,'Establecimiento' )" );
     }
 
     public void limpia()

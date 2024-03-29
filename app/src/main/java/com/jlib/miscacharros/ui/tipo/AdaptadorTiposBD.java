@@ -40,7 +40,7 @@ public class AdaptadorTiposBD extends AdaptadorTipos {
     @Override
     public void onBindViewHolder(ViewHolder holder, int posicion) {
         Tipo tipo = tipoPosicion(posicion);
-        holder.personaliza(tipo);
+        holder.personaliza(tipo,holder);
         //holder.itemView.setTag(posicion);
         //holder.itemView.setTag(new Integer(posicion));
         //holder.itemView.setTag(new Integer(tipo.getId()));
@@ -63,6 +63,14 @@ public class AdaptadorTiposBD extends AdaptadorTipos {
                 //int posicion = (int) (v.getTag());
                 int posicion = holder.getLayoutPosition();
                 deleteItem(holder,tipo,posicion);
+            }
+        });
+
+        holder.botonColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int posicion = holder.getLayoutPosition();
+                selectorColor(holder,tipo,posicion);
             }
         });
 

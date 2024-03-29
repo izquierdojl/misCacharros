@@ -6,6 +6,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
 
 import com.jlib.miscacharros.datos.generalBD;
 import com.jlib.miscacharros.modelo.Tipo;
@@ -23,6 +24,7 @@ public class TiposBD extends generalBD implements RepositorioTipos {
         tipo.setId(cursor.getInt(0));
         tipo.setNombre(cursor.getString(1));
         tipo.setPrioridad(cursor.getInt(2));
+        tipo.setColor(cursor.getInt(3));
         return tipo;
     }
 
@@ -51,7 +53,7 @@ public class TiposBD extends generalBD implements RepositorioTipos {
 
     @Override
     public void anade(Tipo tipo) {
-        String sql = "INSERT INTO tipo (nombre,prioridad) VALUES ('" + tipo.getNombre() + "'," + tipo.getPrioridad() + ")";
+        String sql = "INSERT INTO tipo (nombre,prioridad,color) VALUES ('" + tipo.getNombre() + "'," + tipo.getPrioridad() + "," + tipo.getColor() + ")";
         getWritableDatabase().execSQL(sql);
     }
 
@@ -82,20 +84,19 @@ public class TiposBD extends generalBD implements RepositorioTipos {
     public void actualiza(int id, Tipo tipo) {
         String sql = "UPDATE tipo SET "
                 + " nombre= '" + tipo.getNombre() + "', "
-                + " prioridad= " + tipo.getPrioridad()
+                + " prioridad= " + tipo.getPrioridad()+ ", "
+                + " color= " + tipo.getColor()
                 + " WHERE id = " + id ;
         getWritableDatabase().execSQL(sql);
     }
 
     @Override
     public void anadeEjemplos() {
-
-        getWritableDatabase().execSQL( "INSERT INTO tipo VALUES (1,'Cocina y Electrodoméstidos',3 )" );
-        getWritableDatabase().execSQL( "INSERT INTO tipo VALUES (2,'Entretenimiento',5 )" );
-        getWritableDatabase().execSQL( "INSERT INTO tipo VALUES (3,'Móviles y Accesorios',4 )" );
-        getWritableDatabase().execSQL( "INSERT INTO tipo VALUES (4,'Hogar',2 )" );
-        getWritableDatabase().execSQL( "INSERT INTO tipo VALUES (5,'Varios',1 )" );
-
+        getWritableDatabase().execSQL( "INSERT INTO tipo VALUES (1,'Cocina y Electrodoméstidos',3,"+Color.rgb(250,219,216)+")");
+        getWritableDatabase().execSQL( "INSERT INTO tipo VALUES (2,'Entretenimiento',5,"+Color.rgb(212,230,241)+")");
+        getWritableDatabase().execSQL( "INSERT INTO tipo VALUES (3,'Móviles y Accesorios',4,"+Color.rgb(253,235,208)+")");
+        getWritableDatabase().execSQL( "INSERT INTO tipo VALUES (4,'Hogar',2,"+Color.rgb(234,237,237)+")");
+        getWritableDatabase().execSQL( "INSERT INTO tipo VALUES (5,'Varios',1,"+Color.rgb(215,218,226)+")");
     }
 
     public void limpia()

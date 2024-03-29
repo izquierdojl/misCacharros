@@ -47,11 +47,13 @@ public class TiposLista implements RepositorioTipos {
     }
     public void anadeEjemplos()
     {
+        /*
         anade(new Tipo("Cocina y Electrodomésticos",1,3));
         anade(new Tipo("Entretenimiento",2,5));
         anade(new Tipo("Móviles y Accesorios",3,4));
         anade(new Tipo("Hogar",4,2));
         anade(new Tipo("Varios",5,1));
         sortPrioridad();
+        */
     }
 }

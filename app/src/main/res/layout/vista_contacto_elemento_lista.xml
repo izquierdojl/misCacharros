@@ -28,10 +28,14 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:maxLines="1"
+        android:ellipsize="end"
         android:text="Nombre del contacto"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/black"
+        android:background="@color/cardview_shadow_end_color"
         android:textStyle="bold"
         app:layout_constraintLeft_toRightOf="@+id/foto"
+        app:layout_constraintRight_toLeftOf="@+id/botonEditar"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

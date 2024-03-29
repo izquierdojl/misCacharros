@@ -1,5 +1,7 @@
 package com.jlib.miscacharros.ui.tipo;
 
+import static android.graphics.Color.rgb;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -89,11 +91,14 @@ public class VistaListaTipoActivity extends AppCompatActivity{
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Tipo tipo = new Tipo();
                         tipo.setNombre(entrada.getText().toString());
-                        tipo.setPrioridad(1);
-                        adaptador.controller.nuevo(tipo);
-                        Cursor cursorAsigna = adaptador.controller.getTipos().extraeCursor();
-                        adaptador.setCursor(cursorAsigna);
-                        adaptador.notifyItemInserted(adaptador.getItemCount());
+                        if( !tipo.getNombre().isEmpty() ) {
+                            tipo.setPrioridad(1);
+                            tipo.setColor(rgb(208, 211, 212));
+                            adaptador.controller.nuevo(tipo);
+                            Cursor cursorAsigna = adaptador.controller.getTipos().extraeCursor();
+                            adaptador.setCursor(cursorAsigna);
+                            adaptador.notifyItemInserted(adaptador.getItemCount());
+                        }
                     }})
                 .setNegativeButton("Cancelar", null)
                 .show();

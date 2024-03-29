@@ -3,6 +3,7 @@ package com.jlib.miscacharros.controlador.tipo;
 import android.app.Activity;
 import android.content.Intent;
 import com.jlib.miscacharros.datos.tipo.TiposBDAdapter;
+import com.jlib.miscacharros.modelo.Contacto;
 import com.jlib.miscacharros.modelo.Tipo;
 import com.jlib.miscacharros.ui.tipo.VistaListaTipoActivity;
 import com.jlib.miscacharros.ui.tipo.VistaDetalleTipoActivity;
@@ -56,6 +57,12 @@ public class ControladorTipo
     {
         tipos.anade(tipo);
     }
+
+    public void actualiza( int id, Tipo tipo )
+    {
+        tipos.actualiza( id, tipo );
+    }
+
 
     public void ejemplos()
     {

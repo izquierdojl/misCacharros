@@ -58,7 +58,7 @@ public class AdaptadorContactos extends
             name.setText(contacto.getName());
             web.setText(contacto.getWeb());
             id.setText(String.valueOf(contacto.getId()));
-            if( contacto.getTelephone().isEmpty()) {
+            if( contacto.getTelephone().isEmpty() ) {
                 botonCall.setVisibility(View.GONE);
             }else{
                 botonCall.setVisibility(View.VISIBLE);
@@ -101,9 +101,11 @@ public class AdaptadorContactos extends
     // Usando como base el ViewHolder y lo personalizamos
     @Override
     public void onBindViewHolder(ViewHolder holder, int i) {
-        Contacto contacto = controller.getContactos().elemento(i);
-        holder.personaliza(contacto);
-        holder.itemView.setTag(i);
+        if( controller.getContactos().tamano() > 0 ) {
+            Contacto contacto = controller.getContactos().elemento(i);
+            holder.personaliza(contacto);
+            holder.itemView.setTag(i);
+        }
     }
     // Indicamos el número de elementos de la lista
 
@@ -161,7 +163,6 @@ public class AdaptadorContactos extends
                 double lat = contacto.getGeopunto().getLatitud();
                 double lon = contacto.getGeopunto().getLongitud();
                 uri = Uri.parse("geo:" + lat + "," + lon +"?q=" + lat + "," + lon+"(prueba)");
-
             }
             Intent intent = new Intent("android.intent.action.VIEW", uri);
             Context context = view.getContext();

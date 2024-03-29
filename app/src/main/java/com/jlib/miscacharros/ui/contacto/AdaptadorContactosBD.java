@@ -1,13 +1,12 @@
 package com.jlib.miscacharros.ui.contacto;
 
 import android.database.Cursor;
-import android.util.Log;
+
 import android.view.View;
 
 import com.jlib.miscacharros.datos.contacto.ContactosBD;
 import com.jlib.miscacharros.datos.contacto.ContactosBDAdapter;
 import com.jlib.miscacharros.modelo.Contacto;
-import com.jlib.miscacharros.modelo.Tipo;
 
 public class AdaptadorContactosBD extends AdaptadorContactos {
 
@@ -41,24 +40,24 @@ public class AdaptadorContactosBD extends AdaptadorContactos {
     @Override
     public void onBindViewHolder(ViewHolder holder, int posicion) {
         Contacto contacto = contactoPosicion(posicion);
-        holder.personaliza(contacto);
-        holder.botonBorrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                //int posicion = (int) (v.getTag());
-                int posicion = holder.getLayoutPosition();
-                deleteItem(holder,contacto,posicion);
-            }
-        });
+        if( contacto != null ) {
+            holder.personaliza(contacto);
+            holder.botonBorrar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //int posicion = (int) (v.getTag());
+                    int posicion = holder.getLayoutPosition();
+                    deleteItem(holder, contacto, posicion);
+                }
+            });
 
-        holder.botonEditar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                editItem(holder,contacto,posicion);
-            }
-        });
+            holder.botonEditar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    editItem(holder, contacto, posicion);
+                }
+            });
+        }
 
     }
 
