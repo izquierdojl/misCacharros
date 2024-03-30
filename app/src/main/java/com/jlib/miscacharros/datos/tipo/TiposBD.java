@@ -11,6 +11,9 @@ import android.graphics.Color;
 import com.jlib.miscacharros.datos.generalBD;
 import com.jlib.miscacharros.modelo.Tipo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TiposBD extends generalBD implements RepositorioTipos {
 
     Context contexto;
@@ -108,5 +111,21 @@ public class TiposBD extends generalBD implements RepositorioTipos {
 
     @Override
     public void sortPrioridad() {
+    }
+
+    @Override
+    public List<Tipo> getLista() {
+        List<Tipo> listaTipos = new ArrayList<Tipo>();
+        Cursor cursor = extraeCursor();
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                Tipo tipo = new Tipo();
+                tipo.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
+                tipo.setNombre(cursor.getString(cursor.getColumnIndexOrThrow("nombre")));
+                listaTipos.add(tipo);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return listaTipos;
     }
 }

@@ -33,8 +33,21 @@ public class generalBD extends SQLiteOpenHelper {
                 + " web TEXT, "
                 + " latitud DOUBLE, "
                 + " longitud DOUBLE ) ";
-
        db.execSQL(sql);
+
+        sql = "CREATE TABLE cacharro ("
+                + " id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + " name TEXT, "
+                + " fabricante TEXT, "
+                + " idContacto INTEGER, "
+                + " idTipo INTEGER, "
+                + " archivo BLOB, "
+                + " imagen BLOG, "
+                + " alta LONG, "
+                + " FOREIGN KEY (idTipo) REFERENCES tipo(id) ON DELETE RESTRICT, "
+                + " FOREIGN KEY (idContacto) REFERENCES contacto(id) ON DELETE RESTRICT )" ;
+
+        db.execSQL(sql);
 
     }
 

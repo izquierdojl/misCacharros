@@ -45,6 +45,12 @@ public class ContactosLista implements RepositorioContactos {
             }
         });
     }
+
+    @Override
+    public List<Contacto> getLista() {
+        return this.listaContactos;
+    }
+
     public void anadeEjemplos()
     {
     }

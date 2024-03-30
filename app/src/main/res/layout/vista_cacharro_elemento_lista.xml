@@ -1,0 +1,89 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/round_corners"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    android:elevation="8dp"
+    android:padding="4dp">
+
+    <ImageView android:id="@+id/imagen"
+        android:layout_width="64dp"
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:layout_margin="4dp"
+        android:contentDescription="fotografía"
+        android:src="@android:drawable/ic_menu_myplaces"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/black"
+        android:background="@color/cardview_shadow_end_color"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@+id/imagen"
+        app:layout_constraintRight_toLeftOf="@+id/botonEditar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/fabricante"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textStyle="normal"
+        android:autoLink="web"
+        app:layout_constraintLeft_toRightOf="@+id/imagen"
+        app:layout_constraintTop_toBottomOf="@id/name" />
+
+    <ImageButton
+        android:id="@+id/botonEditar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="36dp"
+        android:background="#00FFFFFF"
+        android:contentDescription="Editar"
+        android:src="@android:drawable/ic_menu_edit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/botonBorrar"
+        app:layout_constraintLeft_toRightOf="@+id/name"
+        app:layout_constraintRight_toLeftOf="@+id/name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageButton
+        android:id="@+id/botonBorrar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="12dp"
+        android:background="#00FFFFFF"
+        android:contentDescription="Borrar"
+        android:src="@android:drawable/ic_menu_delete"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/botonEditar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/Id_Cacharro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

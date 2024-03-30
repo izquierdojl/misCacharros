@@ -1,0 +1,156 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_detalle_cacharro"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:title="Detalle Contacto">
+
+        <ImageButton
+            android:id="@+id/action_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_save"
+            android:layout_marginRight="4dp"
+            android:contentDescription="Guardar"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_gravity="end"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/textView_name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_detalle_cacharro"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Nombre:"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/editText_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView_name_label"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:hint="Introduzca el nombre"
+        android:inputType="text" />
+
+    <!-- Campo Fabricante -->
+    <TextView
+        android:id="@+id/textView_fabricante_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editText_name"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Fabricante:"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/editText_fabricante"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView_fabricante_label"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:hint="Introduzca el fabricante"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/textView_tipo_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editText_fabricante"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Tipo:"
+        android:textSize="16sp" />
+
+    <Spinner
+        android:id="@+id/spinner_tipo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView_tipo_label"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/textView_contacto_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinner_tipo"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Contacto:"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/editText_contacto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView_contacto_label"
+        android:hint="Seleccionar contacto"
+        android:drawableEnd="@drawable/baseline_keyboard_arrow_down_24"
+        android:background="@android:drawable/editbox_background"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp" />
+
+    <!-- Botón para adjuntar archivo -->
+    <Button
+        android:id="@+id/button_adjuntar_archivo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editText_contacto"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:text="Adjuntar archivo" />
+
+    <!-- Botón para adjuntar imagen -->
+    <Button
+        android:id="@+id/button_adjuntar_imagen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_adjuntar_archivo"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:text="Adjuntar imagen" />
+
+    <!-- ImageView para mostrar la imagen adjunta -->
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_adjuntar_imagen"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:visibility="gone" />
+
+    <!-- TextView para mostrar el nombre del archivo adjunto -->
+    <TextView
+        android:id="@+id/text_view_archivo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image_view"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Nombre del archivo adjunto"
+        android:visibility="gone" />
+
+</RelativeLayout>

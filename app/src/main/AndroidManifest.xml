@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -27,6 +30,11 @@
         <activity android:name="com.jlib.miscacharros.ui.tipo.VistaListaTipoActivity" />
         <activity android:name="com.jlib.miscacharros.ui.contacto.VistaDetalleContactoActivity" />
         <activity android:name="com.jlib.miscacharros.ui.contacto.VistaListaContactoActivity" />
+        <activity android:name="com.jlib.miscacharros.ui.cacharro.VistaDetalleCacharroActivity" />
+
     </application>
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 </manifest>

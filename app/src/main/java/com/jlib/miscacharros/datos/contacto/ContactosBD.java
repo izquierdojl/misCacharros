@@ -11,6 +11,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.jlib.miscacharros.datos.generalBD;
 import com.jlib.miscacharros.modelo.Contacto;
 import com.jlib.miscacharros.modelo.GeoPunto;
+import com.jlib.miscacharros.modelo.Tipo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContactosBD extends generalBD implements RepositorioContactos {
 
@@ -139,4 +143,21 @@ public class ContactosBD extends generalBD implements RepositorioContactos {
     @Override
     public void sortName() {
     }
+
+    @Override
+    public List<Contacto> getLista() {
+        List<Contacto> listaContactos = new ArrayList<Contacto>();
+        Cursor cursor = extraeCursor();
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                Contacto contacto = new Contacto();
+                contacto.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
+                contacto.setName(cursor.getString(cursor.getColumnIndexOrThrow("name")));
+                listaContactos.add(contacto);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return listaContactos;
+    }
+
 }

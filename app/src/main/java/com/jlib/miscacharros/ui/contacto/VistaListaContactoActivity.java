@@ -75,6 +75,9 @@ public class VistaListaContactoActivity extends AppCompatActivity{
             }
         });
 
+        if( adaptador.getItemCount() == 0 )
+            binding.editTextSearch.setVisibility(View.GONE);
+
     }
 
     @Override
@@ -87,6 +90,10 @@ public class VistaListaContactoActivity extends AppCompatActivity{
     public void onResume() {
         super.onResume();
         adaptador.notifyDataSetChanged();
+        if( adaptador.getItemCount() == 0 )
+            binding.editTextSearch.setVisibility(View.GONE);
+        else
+            binding.editTextSearch.setVisibility(View.VISIBLE);
     }
 
     @Override

@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import com.google.android.material.tabs.TabLayout;
+import com.jlib.miscacharros.controlador.cacharro.ControladorCacharro;
 import com.jlib.miscacharros.controlador.contacto.ControladorContacto;
 import com.jlib.miscacharros.controlador.tipo.ControladorTipo;
 import com.jlib.miscacharros.ui.acercade.acercadeActivity;
 import com.jlib.miscacharros.databinding.ActivityMainBinding;
+import com.jlib.miscacharros.ui.cacharro.VistaListaCacharroFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private ControladorTipo controladorTipo;
     private ControladorContacto controladorContacto;
+    private ControladorCacharro controladorCacharro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition())
                 {
+                    case 0:
+                        break;
                     case 1:
                         lanzarVistaTipo(null);
                         break;
@@ -107,8 +112,11 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+        // Manejar el tab "Cacharros" principal
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new VistaListaCacharroFragment())
+                .commit();
+
     }
-
-
 
 }

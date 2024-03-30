@@ -12,6 +12,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,6 +43,8 @@ public class VistaListaTipoActivity extends AppCompatActivity{
         RecyclerView recyclerView = binding.recyclerView;
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // así se vería como una tabla
+        //recyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // 2 indica el número de columnas en la cuadrícula
         recyclerView.setAdapter(adaptador);
 
         /*

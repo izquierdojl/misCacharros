@@ -63,7 +63,6 @@ public class ControladorTipo
         tipos.actualiza( id, tipo );
     }
 
-
     public void ejemplos()
     {
         tipos.anadeEjemplos();

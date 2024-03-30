@@ -1,6 +1,9 @@
 package com.jlib.miscacharros.datos.contacto;
 
 import com.jlib.miscacharros.modelo.Contacto;
+import com.jlib.miscacharros.modelo.Tipo;
+
+import java.util.List;
 
 public interface RepositorioContactos {
     Contacto elemento(int id); // devuelve un tipo en base a su id
@@ -10,5 +13,6 @@ public interface RepositorioContactos {
     void actualiza(int id, Contacto contacto); // actualiza un tipo por su posicion
     void anadeEjemplos(); // para pruebas
     void sortName();
+    List<Contacto> getLista();
 
 }

@@ -2,6 +2,8 @@ package com.jlib.miscacharros.datos.tipo;
 
 import com.jlib.miscacharros.modelo.Tipo;
 
+import java.util.List;
+
 public interface RepositorioTipos {
     Tipo elemento(int id); // devuelve un tipo en base a su id
     void anade(Tipo tipo); // añade un objeto tipo
@@ -10,5 +12,6 @@ public interface RepositorioTipos {
     void actualiza(int id, Tipo tipo); // actualiza un tipo por su posicion
     void anadeEjemplos(); // para pruebas
     void sortPrioridad();
+    List<Tipo> getLista();
 
 }

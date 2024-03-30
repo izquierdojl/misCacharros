@@ -45,6 +45,12 @@ public class TiposLista implements RepositorioTipos {
             }
         });
     }
+
+    @Override
+    public List<Tipo> getLista() {
+        return listaTipos;
+    }
+
     public void anadeEjemplos()
     {
         /*
