@@ -53,7 +53,7 @@
         android:layout_below="@id/editText_name"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Fabricante:"
+        android:text="Fabricante/Modelo:"
         android:textSize="16sp" />
 
     <EditText
@@ -64,7 +64,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
-        android:hint="Introduzca el fabricante"
+        android:hint="Introduzca el fabricante/modelo"
         android:inputType="text" />
 
     <TextView
@@ -103,7 +103,6 @@
         android:layout_below="@id/textView_contacto_label"
         android:hint="Seleccionar contacto"
         android:drawableEnd="@drawable/baseline_keyboard_arrow_down_24"
-        android:background="@android:drawable/editbox_background"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp" />
@@ -116,7 +115,24 @@
         android:layout_below="@id/editText_contacto"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
+        android:paddingLeft="8dp"
+        android:drawableLeft="@drawable/baseline_attach_file_24"
         android:text="Adjuntar archivo" />
+
+    <Button
+        android:id="@+id/button_abrir_archivo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editText_contacto"
+        android:layout_toRightOf="@id/button_adjuntar_archivo"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:paddingLeft="8dp"
+        android:drawableLeft="@drawable/baseline_file_open_24"
+        android:backgroundTint="@color/material_on_background_emphasis_high_type"
+        android:text="Abrir adjunto" />
+
+
 
     <!-- Botón para adjuntar imagen -->
     <Button
@@ -126,7 +142,21 @@
         android:layout_below="@id/button_adjuntar_archivo"
         android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
-        android:text="Adjuntar imagen" />
+        android:paddingLeft="8dp"
+        android:drawableLeft="@drawable/baseline_add_a_photo_24"
+        android:text="Capturar imagen" />
+
+    <Button
+        android:id="@+id/button_adjuntar_imagen_gallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/button_adjuntar_imagen"
+        android:layout_below="@id/button_adjuntar_archivo"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:paddingLeft="8dp"
+        android:drawableLeft="@drawable/baseline_browse_gallery_24"
+        android:text="Galería" />
 
     <!-- ImageView para mostrar la imagen adjunta -->
     <ImageView

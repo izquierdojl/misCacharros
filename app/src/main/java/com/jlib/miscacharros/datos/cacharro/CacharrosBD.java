@@ -27,7 +27,8 @@ public class CacharrosBD extends generalBD implements RepositorioCacharros {
         cacharro.setIdTipo(cursor.getInt(4));
         cacharro.setImagen(cursor.getBlob(5));
         cacharro.setArchivo(cursor.getBlob(6));
-        cacharro.setAlta(cursor.getLong(7));
+        cacharro.setNomarchivo(cursor.getString(7));
+        cacharro.setAlta(cursor.getLong(8));
         return cacharro;
     }
 
@@ -64,6 +65,7 @@ public class CacharrosBD extends generalBD implements RepositorioCacharros {
         values.put("idTipo", cacharro.getIdTipo());
         values.put("imagen", cacharro.getImagen());
         values.put("archivo", cacharro.getArchivo());
+        values.put("nomarchivo", cacharro.getNomarchivo());
         values.put("alta", cacharro.getAlta());
         db.insert("cacharro",null,values);
         db.close();
@@ -101,7 +103,8 @@ public class CacharrosBD extends generalBD implements RepositorioCacharros {
         values.put("idContacto", cacharro.getIdContacto());
         values.put("idTipo", cacharro.getIdTipo());
         values.put("imagen", cacharro.getImagen());
-        values.put("archivo", cacharro.getImagen());
+        values.put("archivo", cacharro.getArchivo());
+        values.put("nomarchivo", cacharro.getNomarchivo());
         values.put("alta", cacharro.getAlta());
         db.update("cacharro", values, "id = ?", new String[]{String.valueOf(id)});
         db.close();

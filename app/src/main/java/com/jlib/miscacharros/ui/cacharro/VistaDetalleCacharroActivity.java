@@ -1,34 +1,39 @@
 package com.jlib.miscacharros.ui.cacharro;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
 import com.jlib.miscacharros.Aplicacion;
 import com.jlib.miscacharros.R;
@@ -41,12 +46,13 @@ import com.jlib.miscacharros.modelo.Contacto;
 import com.jlib.miscacharros.modelo.Tipo;
 import com.jlib.miscacharros.ui.tipo.AdaptadorSpinnerTipos;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+import java.util.List;
 
 public class VistaDetalleCacharroActivity extends AppCompatActivity {
     private AdaptadorCacharrosBD adaptador;
@@ -83,6 +89,7 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 cacharro.setName(binding.editTextName.getText().toString());
+                cacharro.setFabricante(binding.editTextFabricante.getText().toString());
                 if( modo == 1 ) {
                     controller.anade(cacharro);
                     adaptador.setCursor(controller.getCacharros().extraeCursor());
@@ -125,13 +132,14 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
 
                 // set transparent background
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
                 // show dialog
                 dialog.show();
 
                 // Initialize and assign variable
                 EditText editText=dialog.findViewById(R.id.edit_text);
                 ListView listView=dialog.findViewById(R.id.list_view);
+                editText.setBackgroundColor(getColor(R.color.list_back_color));
+                editText.setTextColor(getColor(R.color.list_text_color));
                 listView.setBackgroundColor(getColor(R.color.list_back_color));
 
                 ArrayList<String> mostrarBusqueda = new ArrayList<String>();
@@ -176,25 +184,96 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
             }
         });
 
-        /*
-        AdaptadorSpinnerContactos adaptadorSpinnerContactos = new AdaptadorSpinnerContactos(this, controllerContacto.getContactos().getLista() );
-        binding.spinnerContacto.setAdapter(adaptadorSpinnerContactos);
-        binding.spinnerContacto.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Contacto contactoSeleccionado = (Contacto) parent.getItemAtPosition(position);
-                int idContactoSeleccionado = contactoSeleccionado.getId();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-        */
 
         binding.buttonAdjuntarImagen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkCameraPermission();
+                if( cacharro.getImagen() != null && cacharro.getImagen().length > 0 ){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                    builder.setTitle("Confirmación")
+                            .setMessage("¿ Ya existe una imagen registrada, seguro de continuar ? La imagen se reemplazará")
+                            .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss(); // Cierra el cuadro de diálogo
+                                    checkCameraPermission();
+                                }
+                            })
+                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss(); // Cierra el cuadro de diálogo
+                                }
+                            })
+                            .show();
+
+                }else {
+                    checkCameraPermission();
+                }
+            }
+        });
+
+        binding.buttonAdjuntarImagenGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ( cacharro.getImagen() != null && cacharro.getImagen().length > 0) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                    builder.setTitle("Confirmación")
+                            .setMessage("¿ Ya existe una imagen registrada, seguro de continuar ? La imagen se reemplazará")
+                            .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss(); // Cierra el cuadro de diálogo
+                                    checkGalleryPermission();
+                                }
+                            })
+                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss(); // Cierra el cuadro de diálogo
+                                }
+                            })
+                            .show();
+
+                } else {
+                    checkGalleryPermission();
+                }
+            }
+        });
+
+        binding.buttonAdjuntarArchivo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cacharro.getNomarchivo()!=null && !cacharro.getNomarchivo().isEmpty()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                    builder.setTitle("Confirmación")
+                            .setMessage("¿ Ya existe una archivo adjuntado, seguro de continuar ? El archivo se reemplazará")
+                            .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss(); // Cierra el cuadro de diálogo
+                                    checkFilePermission();
+                                    //
+                                }
+                            })
+                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss(); // Cierra el cuadro de diálogo
+                                }
+                            })
+                            .show();
+
+                } else {
+                    checkFilePermission();
+                }
+            }
+        });
+
+        binding.buttonAbrirArchivo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirArchivo();
             }
         });
 
@@ -226,19 +305,18 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
                     break;
                 }
             }
-            /*
-            for (int i = 0; i < binding.spinnerTipo.getAdapter().getCount(); i++) {
-                Tipo tipo = (Tipo) binding.spinnerTipo.getAdapter().getItem(i);
-                if( cacharro.getIdTipo() == tipo.getId()) {
-                    binding.spinnerTipo.setSelection(i);
-                }
+            if( cacharro.getImagen()!=null && cacharro.getImagen().length > 0 )
+            {
+                byte[] photoBytes = cacharro.getImagen(); //
+                Bitmap photoBmp = BitmapFactory.decodeByteArray(photoBytes,0,photoBytes.length);
+                binding.imageView.setImageBitmap(photoBmp);
+                binding.imageView.setVisibility(View.VISIBLE);
             }
-
-            Contacto contacto;
-            contacto = controllerContacto.getContactos().elemento(cacharro.getIdTipo());
-            if ( contacto != null )
-              binding.editTextContacto.setText( contacto.getName() );
-            */
+            if(cacharro.getNomarchivo()!=null && !cacharro.getNomarchivo().isEmpty()){
+                binding.buttonAbrirArchivo.setVisibility(View.VISIBLE);
+            }else{
+                binding.buttonAbrirArchivo.setVisibility(View.GONE);
+            }
         } else if ( modo == 1 ) { // AÑADIR --> DE MOMENTO NO HACEMOS NADA
 
         }
@@ -262,9 +340,12 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         }
     }
 
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_PERMISSION_CAMERA = 2;
     private static final int pic_id = 123;
+    private static final int REQUEST_CODE_PERMISSION = 100;
+    private static final int PICK_FILE_REQUEST = 1;
+    private static final int PICK_IMAGE_REQUEST = 2;
+
     private String currentPhotoPath;
 
     // Método para verificar y solicitar permisos de cámara en tiempo de ejecución
@@ -281,47 +362,12 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         }
     }
 
-    // Método para crear un archivo de imagen
-    private void createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-        currentPhotoPath = image.getAbsolutePath();
-    }
-
     // Método para iniciar la actividad de captura de imágenes
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(camera_intent, pic_id);
-
-        /*
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            try {
-                createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-                ex.printStackTrace();
-            }
-            // Continue only if the File was successfully created
-            if (currentPhotoPath != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
-                        new File(currentPhotoPath));
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
-        }
-        */
-
     }
 
     // Manejar el resultado de la solicitud de permisos
@@ -339,18 +385,190 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         }
     }
 
-    // Manejar el resultado de la actividad de captura de imágenes
+    private void checkGalleryPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request the permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_CODE_PERMISSION);
+        } else {
+            // Permission has already been granted
+            openGallery();
+        }
+    }
+
+
+    private void openGallery() {
+        // Intent para abrir la galería
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        galleryIntent.setType("image/*");
+        startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST);
+    }
+
+
+    private void checkFilePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request the permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_CODE_PERMISSION);
+        } else {
+            // Permission has already been granted
+            openFile();
+        }
+    }
+
+    private void openFile()
+    {
+        Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        fileIntent.setType("*/*"); // Selecciona cualquier tipo de archivo
+        fileIntent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(Intent.createChooser(fileIntent, "Seleccionar archivo"), PICK_FILE_REQUEST);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == pic_id ) {
+        if (requestCode == pic_id && resultCode == RESULT_OK && data != null && data.getData() != null) {
             // Image captured and saved to fileUri specified in the Intent
             // Now you can do something with the saved image, such as displaying it in an ImageView
             // For example, you can set the captured image to an ImageView
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            binding.imageView.setImageBitmap(photo);
-            cacharro.setImagen(currentPhotoPath.getBytes());
+            try {
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                binding.imageView.setImageBitmap(photo);
+                binding.imageView.setVisibility(View.VISIBLE);
+                ByteArrayOutputStream photoStream = new ByteArrayOutputStream();
+                photo.compress(Bitmap.CompressFormat.JPEG, 100, photoStream);
+                cacharro.setImagen(photoStream.toByteArray());
+            }catch (Exception e ) {
+                throw new RuntimeException(e);
+            }
+
+        }
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri selectedImageUri = data.getData();
+            binding.imageView.setImageURI(selectedImageUri);
+            binding.imageView.setVisibility(View.VISIBLE);
+            try {
+                Bitmap photo = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                ByteArrayOutputStream photoStream = new ByteArrayOutputStream();
+                photo.compress(Bitmap.CompressFormat.JPEG, 100, photoStream);
+                cacharro.setImagen(photoStream.toByteArray());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if (requestCode == PICK_FILE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri selectedFileUri = data.getData();
+            InputStream inputStream = null;
+            ByteArrayOutputStream byteArrayOutputStream = null;
+            try {
+                inputStream = getContentResolver().openInputStream(selectedFileUri);
+                byteArrayOutputStream = new ByteArrayOutputStream();
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    byteArrayOutputStream.write(buffer, 0, bytesRead);
+                }
+                byte[] fileBytes = byteArrayOutputStream.toByteArray();
+                cacharro.setArchivo(fileBytes);
+                String fileName = getFileName(selectedFileUri);
+                cacharro.setNomarchivo(fileName);
+                binding.buttonAbrirArchivo.setVisibility(View.VISIBLE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                // Asegúrate de cerrar los InputStream y ByteArrayOutputStream
+                try {
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+                    if (byteArrayOutputStream != null) {
+                        byteArrayOutputStream.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
+
+    private String getFileName(Uri uri) {
+        String fileName = null;
+        Cursor cursor = null;
+        try {
+            cursor = getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return fileName;
+    }
+
+    protected void abrirArchivo() {
+
+        byte[] fileBytes = cacharro.getArchivo();
+
+        File tempFile = new File(cacharro.getNomarchivo());
+        if (tempFile.exists())
+            tempFile.delete();
+        String mimeType = getMimeType(tempFile.getPath());
+
+        // Crear un intent para abrir el archivo con la aplicación predeterminada
+        Intent viewIntent = new Intent(Intent.ACTION_VIEW);
+        viewIntent.setDataAndType(Uri.fromFile(tempFile), mimeType);
+        viewIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        // Comprobar si hay aplicaciones disponibles para manejar el archivo
+        PackageManager packageManager = getPackageManager();
+        List<ResolveInfo> activities;
+        activities = packageManager.queryIntentActivities(viewIntent, 0);
+        boolean isIntentSafe = activities.size() > 0;
+        if (isIntentSafe) {
+            // Si hay aplicaciones disponibles para manejar el archivo, iniciar la actividad
+            startActivity(viewIntent);
+        } else {
+            Toast.makeText(this, "No hay aplicaciones disponibles para abrir el archivo.", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private File createTempFile(byte[] fileBytes) {
+        File tempFile = null;
+        FileOutputStream fos = null;
+        try {
+            tempFile = File.createTempFile("temp_file", ".pdf", getCacheDir());
+            fos = new FileOutputStream(tempFile);
+            fos.write(fileBytes);
+            fos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return tempFile;
+    }
+
+
+    // Método para obtener el tipo MIME del archivo
+    private String getMimeType(String path) {
+        String extension = MimeTypeMap.getFileExtensionFromUrl(path);
+        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase());
+    }
+
+
+
 
 }

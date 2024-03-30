@@ -11,12 +11,13 @@ public class Cacharro {
     private int idTipo;
     private byte[] imagen;
     private byte[] archivo;
+    private String nomarchivo;
     private long alta;
 
     public Cacharro() {
     }
 
-    public Cacharro(int id, String name, String fabricante, int idContacto, int idTipo, byte[] imagen, byte[] archivo, long alta) {
+    public Cacharro(int id, String name, String fabricante, int idContacto, int idTipo, byte[] imagen, byte[] archivo, String nomarchivo, long alta) {
         this.id = id;
         this.name = name;
         this.fabricante = fabricante;
@@ -24,6 +25,7 @@ public class Cacharro {
         this.idTipo = idTipo;
         this.imagen = imagen;
         this.archivo = archivo;
+        this.nomarchivo = nomarchivo;
         this.alta = alta;
     }
 
@@ -83,6 +85,14 @@ public class Cacharro {
         this.archivo = archivo;
     }
 
+    public String getNomarchivo() {
+        return nomarchivo;
+    }
+
+    public void setNomarchivo(String nomarchivo) {
+        this.nomarchivo = nomarchivo;
+    }
+
     public long getAlta(){
         return alta;
     }
@@ -101,6 +111,7 @@ public class Cacharro {
                 ", idTipo=" + idTipo +
                 ", imagen=" + Arrays.toString(imagen) +
                 ", archivo=" + Arrays.toString(archivo) +
+                ", nomarchivo='" + nomarchivo + '\'' +
                 ", alta=" + alta +
                 '}';
     }
