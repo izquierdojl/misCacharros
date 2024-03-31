@@ -51,6 +51,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,7 +99,6 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
                     controller.actualiza(cacharro.getId(),cacharro);
                     adaptador.setCursor(controller.getCacharros().extraeCursor());
                     adaptador.notifyItemChanged(pos);
-                   // setResult(RESULT_OK);
                 }
                 finish();
             }
@@ -188,7 +188,7 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         binding.buttonAdjuntarImagen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if( cacharro.getImagen() != null && cacharro.getImagen().length > 0 ){
+                if( cacharro.getImagen() != null && !cacharro.getImagen().isEmpty() ){
                     AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                     builder.setTitle("Confirmación")
                             .setMessage("¿ Ya existe una imagen registrada, seguro de continuar ? La imagen se reemplazará")
@@ -216,7 +216,7 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         binding.buttonAdjuntarImagenGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ( cacharro.getImagen() != null && cacharro.getImagen().length > 0) {
+                if ( cacharro.getImagen()!=null && !cacharro.getImagen().isEmpty() ) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                     builder.setTitle("Confirmación")
                             .setMessage("¿ Ya existe una imagen registrada, seguro de continuar ? La imagen se reemplazará")
@@ -305,20 +305,21 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
                     break;
                 }
             }
-            if( cacharro.getImagen()!=null && cacharro.getImagen().length > 0 )
+            if( cacharro.getImagen()!=null && !cacharro.getImagen().isEmpty() )
             {
-                byte[] photoBytes = cacharro.getImagen(); //
-                Bitmap photoBmp = BitmapFactory.decodeByteArray(photoBytes,0,photoBytes.length);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = false;
+                Bitmap photoBmp = BitmapFactory.decodeFile(getFilesDir().getAbsolutePath() + "/" + cacharro.getId()+"/img/"+cacharro.getImagen(),options);
                 binding.imageView.setImageBitmap(photoBmp);
                 binding.imageView.setVisibility(View.VISIBLE);
             }
-            if(cacharro.getNomarchivo()!=null && !cacharro.getNomarchivo().isEmpty()){
+            if( cacharro.getArchivo()!=null && !cacharro.getArchivo().isEmpty() ){
                 binding.buttonAbrirArchivo.setVisibility(View.VISIBLE);
             }else{
                 binding.buttonAbrirArchivo.setVisibility(View.GONE);
             }
         } else if ( modo == 1 ) { // AÑADIR --> DE MOMENTO NO HACEMOS NADA
-
+            binding.buttonAbrirArchivo.setVisibility(View.GONE);
         }
     }
 
@@ -431,7 +432,9 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == pic_id && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+        //if (requestCode == pic_id && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (requestCode == pic_id && resultCode == RESULT_OK) {
             // Image captured and saved to fileUri specified in the Intent
             // Now you can do something with the saved image, such as displaying it in an ImageView
             // For example, you can set the captured image to an ImageView
@@ -439,9 +442,7 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
                 Bitmap photo = (Bitmap) data.getExtras().get("data");
                 binding.imageView.setImageBitmap(photo);
                 binding.imageView.setVisibility(View.VISIBLE);
-                ByteArrayOutputStream photoStream = new ByteArrayOutputStream();
-                photo.compress(Bitmap.CompressFormat.JPEG, 100, photoStream);
-                cacharro.setImagen(photoStream.toByteArray());
+                cacharro.setImagen(guardaPhoto(photo));
             }catch (Exception e ) {
                 throw new RuntimeException(e);
             }
@@ -453,45 +454,16 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
             binding.imageView.setVisibility(View.VISIBLE);
             try {
                 Bitmap photo = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
-                ByteArrayOutputStream photoStream = new ByteArrayOutputStream();
-                photo.compress(Bitmap.CompressFormat.JPEG, 100, photoStream);
-                cacharro.setImagen(photoStream.toByteArray());
+                cacharro.setImagen(guardaPhoto(photo));
+                binding.imageView.setImageBitmap(photo);
+                binding.imageView.setVisibility(View.VISIBLE);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         if (requestCode == PICK_FILE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri selectedFileUri = data.getData();
-            InputStream inputStream = null;
-            ByteArrayOutputStream byteArrayOutputStream = null;
-            try {
-                inputStream = getContentResolver().openInputStream(selectedFileUri);
-                byteArrayOutputStream = new ByteArrayOutputStream();
-                byte[] buffer = new byte[4096];
-                int bytesRead;
-                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    byteArrayOutputStream.write(buffer, 0, bytesRead);
-                }
-                byte[] fileBytes = byteArrayOutputStream.toByteArray();
-                cacharro.setArchivo(fileBytes);
-                String fileName = getFileName(selectedFileUri);
-                cacharro.setNomarchivo(fileName);
-                binding.buttonAbrirArchivo.setVisibility(View.VISIBLE);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                // Asegúrate de cerrar los InputStream y ByteArrayOutputStream
-                try {
-                    if (inputStream != null) {
-                        inputStream.close();
-                    }
-                    if (byteArrayOutputStream != null) {
-                        byteArrayOutputStream.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            cacharro.setArchivo(guardaFile(selectedFileUri));
         }
     }
 
@@ -513,11 +485,8 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
 
     protected void abrirArchivo() {
 
-        byte[] fileBytes = cacharro.getArchivo();
 
-        File tempFile = new File(cacharro.getNomarchivo());
-        if (tempFile.exists())
-            tempFile.delete();
+        File tempFile = new File(cacharro.getId() + "/attach/" );
         String mimeType = getMimeType(tempFile.getPath());
 
         // Crear un intent para abrir el archivo con la aplicación predeterminada
@@ -561,6 +530,74 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         return tempFile;
     }
 
+    protected String guardaPhoto( Bitmap photo )
+    {
+        String directory = getFilesDir().getAbsolutePath() + "/" + cacharro.getId() + "/img/";
+        File fileDirectory = new File(directory);
+        if( !fileDirectory.exists() )
+            if (!fileDirectory.mkdirs()) {
+                return "";
+            }
+        String fileName = "imgCamera_" + System.currentTimeMillis() + ".jpg";
+        File photoFile = new File(directory+fileName);
+        if( photoFile.exists() )
+            photoFile.delete();
+        try (FileOutputStream fos = new FileOutputStream(photoFile)) {
+            photo.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+            fileName = "";
+        }
+        return fileName;
+
+    }
+
+    protected String guardaFile( Uri uriFile )
+    {
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+        String fileName = null;
+        try {
+
+            String directory = getFilesDir().getAbsolutePath() + "/" + cacharro.getId() + "/attach/";
+            fileName = getFileName(uriFile);
+            File fileDirectory = new File(directory);
+            if (!fileDirectory.mkdirs()) {
+                return "";
+            }
+            inputStream = getContentResolver().openInputStream(uriFile);
+            File fileOutput = new File(directory + "/" + fileName);
+            if( fileOutput.exists())
+                fileOutput.delete();
+            outputStream = new FileOutputStream(fileOutput);
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer,0,bytesRead);
+            }
+            cacharro.setArchivo(fileName);
+            cacharro.setNomarchivo(fileName);
+            binding.buttonAbrirArchivo.setVisibility(View.VISIBLE);
+        } catch (IOException e) {
+            e.printStackTrace();
+            fileName="";
+        } finally {
+            // Asegúrate de cerrar los InputStream y ByteArrayOutputStream
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return fileName;
+    }
 
     // Método para obtener el tipo MIME del archivo
     private String getMimeType(String path) {

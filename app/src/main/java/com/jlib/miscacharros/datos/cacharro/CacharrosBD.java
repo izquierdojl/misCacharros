@@ -10,6 +10,9 @@ import android.database.sqlite.SQLiteException;
 import com.jlib.miscacharros.datos.generalBD;
 import com.jlib.miscacharros.modelo.Cacharro;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+
 public class CacharrosBD extends generalBD implements RepositorioCacharros {
 
     Context contexto;
@@ -25,8 +28,8 @@ public class CacharrosBD extends generalBD implements RepositorioCacharros {
         cacharro.setFabricante(cursor.getString(2));
         cacharro.setIdContacto(cursor.getInt(3));
         cacharro.setIdTipo(cursor.getInt(4));
-        cacharro.setImagen(cursor.getBlob(5));
-        cacharro.setArchivo(cursor.getBlob(6));
+        cacharro.setImagen(cursor.getString(5));
+        cacharro.setArchivo(cursor.getString(6));
         cacharro.setNomarchivo(cursor.getString(7));
         cacharro.setAlta(cursor.getLong(8));
         return cacharro;
@@ -104,7 +107,6 @@ public class CacharrosBD extends generalBD implements RepositorioCacharros {
         values.put("idTipo", cacharro.getIdTipo());
         values.put("imagen", cacharro.getImagen());
         values.put("archivo", cacharro.getArchivo());
-        values.put("nomarchivo", cacharro.getNomarchivo());
         values.put("alta", cacharro.getAlta());
         db.update("cacharro", values, "id = ?", new String[]{String.valueOf(id)});
         db.close();
