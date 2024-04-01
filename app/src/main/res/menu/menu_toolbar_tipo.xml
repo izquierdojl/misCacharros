@@ -4,6 +4,6 @@
    <item
         android:id="@+id/action_nuevo_tipo"
         android:title="Añadir Categoría"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/baseline_add_box_32"
         app:showAsAction="always|withText" />
 </menu>

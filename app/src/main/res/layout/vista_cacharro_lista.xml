@@ -26,13 +26,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_text_search" />
 
+    <!-- layout/your_layout.xml -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/boton_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="Filtrar"
+        android:src="@drawable/baseline_filter_alt_32"
+        android:minWidth="32dp"
+        android:minHeight="32dp"
+        app:borderWidth="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/boton_add" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/boton_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:contentDescription="Añadir Cacharro"
-        android:src="@android:drawable/ic_menu_add"
+        android:src="@drawable/baseline_add_box_32"
+        android:minWidth="32dp"
+        android:minHeight="32dp"
+        app:borderWidth="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

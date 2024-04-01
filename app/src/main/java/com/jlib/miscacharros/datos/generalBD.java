@@ -45,6 +45,9 @@ public class generalBD extends SQLiteOpenHelper {
                 + " archivo TEXT, "
                 + " uid TEXT, "
                 + " alta LONG, "
+                + " aviso BOOLEAN, "
+                + " momentoaviso LONG,"
+                + " textoaviso TEXT,"
                 + " FOREIGN KEY (idTipo) REFERENCES tipo(id) ON DELETE RESTRICT, "
                 + " FOREIGN KEY (idContacto) REFERENCES contacto(id) ON DELETE RESTRICT )" ;
 

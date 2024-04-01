@@ -107,12 +107,79 @@
         android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp" />
 
+    <!-- Switch para activar la alerta -->
+    <TextView
+        android:id="@+id/textView_alert_activation_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editText_contacto"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Activar alerta:"
+        android:textSize="16sp" />
+
+    <Switch
+        android:id="@+id/switch_alert_activation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/textView_alert_activation_label"
+        android:layout_below="@id/editText_contacto"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:checked="false" />
+
+    <!-- Botón para añadir alerta -->
+    <Button
+        android:id="@+id/button_select_alert_datetime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/switch_alert_activation"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:drawableLeft="@drawable/baseline_add_alert_24"
+        android:text="Añadir alerta" />
+
+    <TextView
+        android:id="@+id/textViewAlertDatetimeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/switch_alert_activation"
+        android:layout_toRightOf="@id/button_select_alert_datetime"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Activar alerta:"
+        android:textSize="16sp" />
+
+    <!-- Campo Texto Alerta -->
+    <TextView
+        android:id="@+id/textViewCustomAlertTextLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/switch_alert_activation"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Fabricante/Modelo:"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/editTextCustomAlertText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewCustomAlertTextLabel"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:hint="Introduzca el fabricante/modelo"
+        android:inputType="text" />
+
+
+
     <!-- Botón para adjuntar archivo -->
     <Button
         android:id="@+id/button_adjuntar_archivo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editText_contacto"
+        android:layout_below="@id/textViewCustomAlertTextLabel"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:paddingLeft="8dp"
@@ -123,16 +190,13 @@
         android:id="@+id/button_abrir_archivo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editText_contacto"
-        android:layout_toRightOf="@id/button_adjuntar_archivo"
-        android:layout_marginTop="16dp"
+        android:layout_alignBaseline="@id/button_adjuntar_archivo"
+        android:layout_toEndOf="@id/button_adjuntar_archivo"
         android:layout_marginStart="16dp"
         android:paddingLeft="8dp"
         android:drawableLeft="@drawable/baseline_file_open_24"
         android:backgroundTint="@color/material_on_background_emphasis_high_type"
         android:text="Abrir adjunto" />
-
-
 
     <!-- Botón para adjuntar imagen -->
     <Button

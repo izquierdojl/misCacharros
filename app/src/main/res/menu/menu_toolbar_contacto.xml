@@ -4,6 +4,6 @@
    <item
         android:id="@+id/action_nuevo_contacto"
         android:title="Añadir Contacto"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/baseline_add_box_32"
         app:showAsAction="always|withText" />
 </menu>

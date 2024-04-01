@@ -4,7 +4,9 @@ import static android.content.pm.PackageManager.MATCH_ALL;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,8 +29,11 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -56,6 +61,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -67,6 +73,8 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
     private int pos;
     private int modo; //1 - Añadir  2 - Editar
     private Cacharro cacharro;
+    private Calendar calendar;
+    private int year, month, dayOfMonth;
     private @NonNull VistaCacharroDetalleBinding binding;
 
 
@@ -95,6 +103,8 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
             public void onClick(View v) {
                 cacharro.setName(binding.editTextName.getText().toString());
                 cacharro.setFabricante(binding.editTextFabricante.getText().toString());
+                cacharro.setAviso(binding.switchAlertActivation.isActivated());
+                cacharro.setTextoAviso(binding.editTextCustomAlertText.getText().toString());
                 if( modo == 1 ) {
                     controller.anade(cacharro);
                     adaptador.setCursor(controller.getCacharros().extraeCursor());
@@ -188,6 +198,12 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
             }
         });
 
+        binding.buttonSelectAlertDatetime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         binding.buttonAdjuntarImagen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -281,6 +297,24 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
             }
         });
 
+        binding.switchAlertActivation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if( isChecked )
+                {
+                    binding.buttonSelectAlertDatetime.setVisibility(View.VISIBLE);
+                    binding.textViewAlertDatetimeLabel.setVisibility(View.VISIBLE);
+                    binding.editTextCustomAlertText.setVisibility(View.VISIBLE);
+                    binding.textViewCustomAlertTextLabel.setVisibility(View.VISIBLE);
+                }else{
+                    binding.buttonSelectAlertDatetime.setVisibility(View.GONE);
+                    binding.textViewAlertDatetimeLabel.setVisibility(View.GONE);
+                    binding.editTextCustomAlertText.setVisibility(View.GONE);
+                    binding.textViewCustomAlertTextLabel.setVisibility(View.GONE);
+                }
+            }
+        });
+
         actualizaVistas(cacharro,modo);
 
     }
@@ -322,10 +356,28 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
             }else{
                 binding.buttonAbrirArchivo.setVisibility(View.GONE);
             }
+            if( cacharro.isAviso())
+            {
+                binding.buttonSelectAlertDatetime.setVisibility(View.VISIBLE);
+                binding.textViewAlertDatetimeLabel.setVisibility(View.VISIBLE);
+                binding.editTextCustomAlertText.setVisibility(View.VISIBLE);
+                binding.textViewCustomAlertTextLabel.setVisibility(View.VISIBLE);
+            }else{
+                binding.buttonSelectAlertDatetime.setVisibility(View.GONE);
+                binding.textViewAlertDatetimeLabel.setVisibility(View.GONE);
+                binding.editTextCustomAlertText.setVisibility(View.GONE);
+                binding.textViewCustomAlertTextLabel.setVisibility(View.GONE);
+            }
+
         } else if ( modo == 1 ) {
             UUID uuid = UUID.randomUUID();
             cacharro.setUid(uuid.toString());
             binding.buttonAbrirArchivo.setVisibility(View.GONE);
+
+            binding.buttonSelectAlertDatetime.setVisibility(View.GONE);
+            binding.textViewAlertDatetimeLabel.setVisibility(View.GONE);
+            binding.editTextCustomAlertText.setVisibility(View.GONE);
+            binding.textViewCustomAlertTextLabel.setVisibility(View.GONE);
         }
     }
 
@@ -638,6 +690,44 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
     private String getMimeType(String path) {
         String extension = MimeTypeMap.getFileExtensionFromUrl(path);
         return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase());
+    }
+
+    private void showDateTimePickerDialog() {
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        // Selecciona la fecha, ahora muestra el diálogo del selector de hora
+                        VistaDetalleCacharroActivity.this.year = year;
+                        VistaDetalleCacharroActivity.this.month = month;
+                        VistaDetalleCacharroActivity.this.dayOfMonth = dayOfMonth;
+                        showTimePickerDialog();
+                    }
+                }, year, month, dayOfMonth);
+        datePickerDialog.show();
+    }
+
+    private void showTimePickerDialog() {
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        // Aquí obtienes la fecha y la hora seleccionadas
+                        String dateTime = year + "-" + (month + 1) + "-" + dayOfMonth + " " +
+                                hourOfDay + ":" + minute;
+                        Toast.makeText(VistaDetalleCacharroActivity.this, "Fecha y hora seleccionadas: " + dateTime,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }, hour, minute, true);
+        timePickerDialog.show();
     }
 
 }

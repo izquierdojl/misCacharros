@@ -8,11 +8,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import com.jlib.miscacharros.datos.generalBD;
 import com.jlib.miscacharros.modelo.Cacharro;
+import com.jlib.miscacharros.modelo.Tipo;
+
+import java.util.List;
 
 
 public class CacharrosBD extends generalBD implements RepositorioCacharros {
-
-    Context contexto;
 
     public CacharrosBD(Context context) {
         super(context);
@@ -29,6 +30,8 @@ public class CacharrosBD extends generalBD implements RepositorioCacharros {
         cacharro.setArchivo(cursor.getString(cursor.getColumnIndexOrThrow("archivo")));
         cacharro.setAlta(cursor.getLong(cursor.getColumnIndexOrThrow("alta")));
         cacharro.setUid(cursor.getString(cursor.getColumnIndexOrThrow("uid")));
+        if(cursor.getInt(cursor.getColumnIndexOrThrow("aviso"))==1)
+            cacharro.setAviso(true);
         return cacharro;
     }
 
@@ -67,6 +70,12 @@ public class CacharrosBD extends generalBD implements RepositorioCacharros {
         values.put("archivo", cacharro.getArchivo());
         values.put("alta", cacharro.getAlta());
         values.put("uid", cacharro.getUid());
+        if( cacharro.isAviso())
+            values.put("aviso", 1);
+        else
+            values.put("aviso", 0);
+        values.put("momentoaviso", cacharro.getMomentoAviso());
+        values.put("textoaviso", cacharro.getTextoAviso());
         db.insert("cacharro",null,values);
         db.close();
     }
@@ -106,6 +115,12 @@ public class CacharrosBD extends generalBD implements RepositorioCacharros {
         values.put("archivo", cacharro.getArchivo());
         values.put("alta", cacharro.getAlta());
         values.put("uid", cacharro.getUid());
+        if( cacharro.isAviso())
+            values.put("aviso", 1);
+        else
+            values.put("aviso", 0);
+        values.put("momentoaviso", cacharro.getMomentoAviso());
+        values.put("textoaviso", cacharro.getTextoAviso());
         db.update("cacharro", values, "id = ?", new String[]{String.valueOf(id)});
         db.close();
     }
@@ -127,10 +142,34 @@ public class CacharrosBD extends generalBD implements RepositorioCacharros {
     // Método para filtrar datos según el término de búsqueda
 
     public Cursor extraeCursorFiltrado(String searchTerm) {
-        String sql = "SELECT * FROM cacharro WHERE name LIKE '%" + searchTerm + "%' or fabricante LIKE '%\" + searchTerm + \"%'  ORDER BY id DESC";
+        String sql = "SELECT * FROM cacharro WHERE name LIKE '%" + searchTerm + "%' or fabricante LIKE '%" + searchTerm + "%'  ORDER BY id DESC";
         SQLiteDatabase db = getReadableDatabase();
         return db.rawQuery(sql, null);
     }
+
+    public Cursor extraeCursorFiltradoTipo(List<Tipo> tipos) {
+        String whereIn = "";
+        for ( int i = 0; i < tipos.size(); i++ )
+        {
+            if( i==0 )
+                whereIn += "(";
+            whereIn += tipos.get(i).getId();
+            if( i < tipos.size()-1 )
+                whereIn += ",";
+            else
+                whereIn += ")";
+        }
+        if(!whereIn.isEmpty()) {
+            String sql = "SELECT * FROM cacharro WHERE idTipo IN "+whereIn+" ORDER BY id DESC";
+            SQLiteDatabase db = getReadableDatabase();
+            return db.rawQuery(sql, null);
+        }else{
+            String sql = "SELECT * FROM cacharro WHERE 1<>1";
+            SQLiteDatabase db = getReadableDatabase();
+            return db.rawQuery(sql, null);
+        }
+    }
+
 
     @Override
     public void sortName() {

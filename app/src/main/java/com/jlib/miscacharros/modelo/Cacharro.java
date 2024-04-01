@@ -12,13 +12,15 @@ public class Cacharro {
     private String imagen;
     private String archivo;
     private long alta;
-
     private String uid;
+    private boolean aviso;
+    private long momentoAviso;
+    private String textoAviso;
 
     public Cacharro() {
     }
 
-    public Cacharro(int id, String name, String fabricante, int idContacto, int idTipo, String imagen, String archivo, long alta, String uid) {
+    public Cacharro(int id, String name, String fabricante, int idContacto, int idTipo, String imagen, String archivo, long alta, String uid, boolean aviso, long momentoAviso, String textoAviso) {
         this.id = id;
         this.name = name;
         this.fabricante = fabricante;
@@ -28,6 +30,9 @@ public class Cacharro {
         this.archivo = archivo;
         this.alta = alta;
         this.uid = uid;
+        this.aviso = aviso;
+        this.momentoAviso = momentoAviso;
+        this.textoAviso = textoAviso;
     }
 
     public int getId() {
@@ -100,6 +105,30 @@ public class Cacharro {
 
     public void setAlta(long alta){
         this.alta = alta;
+    }
+
+    public boolean isAviso() {
+        return aviso;
+    }
+
+    public void setAviso(boolean aviso) {
+        this.aviso = aviso;
+    }
+
+    public long getMomentoAviso() {
+        return momentoAviso;
+    }
+
+    public void setMomentoAviso(long momentoAviso) {
+        this.momentoAviso = momentoAviso;
+    }
+
+    public String getTextoAviso() {
+        return textoAviso;
+    }
+
+    public void setTextoAviso(String textoAviso) {
+        this.textoAviso = textoAviso;
     }
 
     @Override

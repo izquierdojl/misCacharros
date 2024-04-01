@@ -53,17 +53,17 @@ public class AdaptadorCacharros extends
             id.setText(String.valueOf(cacharro.getId()));
             name.setText(cacharro.getName());
             fabricante.setText(cacharro.getFabricante());
-            if( cacharro.getImagen()!=null && !cacharro.getImagen().isEmpty() )
-            {
+            if( cacharro.getImagen()!=null && !cacharro.getImagen().isEmpty() ) {
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inJustDecodeBounds = false;
-                Bitmap photoBmp = BitmapFactory.decodeFile(holder.itemView.getContext().getFilesDir().getAbsolutePath() + "/" + cacharro.getUid()+"/img/"+cacharro.getImagen(),options);
+                Bitmap photoBmp = BitmapFactory.decodeFile(holder.itemView.getContext().getFilesDir().getAbsolutePath() + "/" + cacharro.getUid() + "/img/" + cacharro.getImagen(), options);
                 imagen.setImageBitmap(photoBmp);
                 imagen.setVisibility(View.VISIBLE);
             }
-            if( cacharro.getArchivo()!=null && !cacharro.getArchivo().isEmpty() )
-            {
+            if( cacharro.getArchivo()!=null && !cacharro.getArchivo().isEmpty() ){
                 archivo.setVisibility(View.VISIBLE);
+            }else{
+                archivo.setVisibility(View.GONE);
             }
             holder.itemView.setBackgroundColor(tipo.getColor());
 
