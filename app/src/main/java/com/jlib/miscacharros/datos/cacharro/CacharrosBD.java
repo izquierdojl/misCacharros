@@ -6,12 +6,9 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-
 import com.jlib.miscacharros.datos.generalBD;
 import com.jlib.miscacharros.modelo.Cacharro;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 
 public class CacharrosBD extends generalBD implements RepositorioCacharros {
 
@@ -23,15 +20,15 @@ public class CacharrosBD extends generalBD implements RepositorioCacharros {
 
     public static Cacharro extraeCacharro(Cursor cursor) {
         Cacharro cacharro  = new Cacharro();
-        cacharro.setId(cursor.getInt(0));
-        cacharro.setName(cursor.getString(1));
-        cacharro.setFabricante(cursor.getString(2));
-        cacharro.setIdContacto(cursor.getInt(3));
-        cacharro.setIdTipo(cursor.getInt(4));
-        cacharro.setImagen(cursor.getString(5));
-        cacharro.setArchivo(cursor.getString(6));
-        cacharro.setNomarchivo(cursor.getString(7));
-        cacharro.setAlta(cursor.getLong(8));
+        cacharro.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
+        cacharro.setName(cursor.getString(cursor.getColumnIndexOrThrow("name")));
+        cacharro.setFabricante(cursor.getString(cursor.getColumnIndexOrThrow("fabricante")));
+        cacharro.setIdContacto(cursor.getInt(cursor.getColumnIndexOrThrow("idContacto")));
+        cacharro.setIdTipo(cursor.getInt(cursor.getColumnIndexOrThrow("idTipo")));
+        cacharro.setImagen(cursor.getString(cursor.getColumnIndexOrThrow("imagen")));
+        cacharro.setArchivo(cursor.getString(cursor.getColumnIndexOrThrow("archivo")));
+        cacharro.setAlta(cursor.getLong(cursor.getColumnIndexOrThrow("alta")));
+        cacharro.setUid(cursor.getString(cursor.getColumnIndexOrThrow("uid")));
         return cacharro;
     }
 
@@ -68,8 +65,8 @@ public class CacharrosBD extends generalBD implements RepositorioCacharros {
         values.put("idTipo", cacharro.getIdTipo());
         values.put("imagen", cacharro.getImagen());
         values.put("archivo", cacharro.getArchivo());
-        values.put("nomarchivo", cacharro.getNomarchivo());
         values.put("alta", cacharro.getAlta());
+        values.put("uid", cacharro.getUid());
         db.insert("cacharro",null,values);
         db.close();
     }
@@ -108,6 +105,7 @@ public class CacharrosBD extends generalBD implements RepositorioCacharros {
         values.put("imagen", cacharro.getImagen());
         values.put("archivo", cacharro.getArchivo());
         values.put("alta", cacharro.getAlta());
+        values.put("uid", cacharro.getUid());
         db.update("cacharro", values, "id = ?", new String[]{String.valueOf(id)});
         db.close();
     }

@@ -1,5 +1,7 @@
 package com.jlib.miscacharros.ui.cacharro;
 
+import static android.content.pm.PackageManager.MATCH_ALL;
+
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,6 +15,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -34,6 +37,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import com.jlib.miscacharros.Aplicacion;
 import com.jlib.miscacharros.R;
@@ -46,7 +50,6 @@ import com.jlib.miscacharros.modelo.Contacto;
 import com.jlib.miscacharros.modelo.Tipo;
 import com.jlib.miscacharros.ui.tipo.AdaptadorSpinnerTipos;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -54,6 +57,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class VistaDetalleCacharroActivity extends AppCompatActivity {
     private AdaptadorCacharrosBD adaptador;
@@ -244,7 +248,7 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         binding.buttonAdjuntarArchivo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (cacharro.getNomarchivo()!=null && !cacharro.getNomarchivo().isEmpty()) {
+                if (cacharro.getArchivo()!=null && !cacharro.getArchivo().isEmpty()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                     builder.setTitle("Confirmación")
                             .setMessage("¿ Ya existe una archivo adjuntado, seguro de continuar ? El archivo se reemplazará")
@@ -273,7 +277,7 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         binding.buttonAbrirArchivo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                abrirArchivo();
+                launchFile();
             }
         });
 
@@ -309,7 +313,7 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
             {
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inJustDecodeBounds = false;
-                Bitmap photoBmp = BitmapFactory.decodeFile(getFilesDir().getAbsolutePath() + "/" + cacharro.getId()+"/img/"+cacharro.getImagen(),options);
+                Bitmap photoBmp = BitmapFactory.decodeFile(getFilesDir().getAbsolutePath() + "/" + cacharro.getUid()+"/img/"+cacharro.getImagen(),options);
                 binding.imageView.setImageBitmap(photoBmp);
                 binding.imageView.setVisibility(View.VISIBLE);
             }
@@ -318,7 +322,9 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
             }else{
                 binding.buttonAbrirArchivo.setVisibility(View.GONE);
             }
-        } else if ( modo == 1 ) { // AÑADIR --> DE MOMENTO NO HACEMOS NADA
+        } else if ( modo == 1 ) {
+            UUID uuid = UUID.randomUUID();
+            cacharro.setUid(uuid.toString());
             binding.buttonAbrirArchivo.setVisibility(View.GONE);
         }
     }
@@ -472,8 +478,13 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         Cursor cursor = null;
         try {
             cursor = getContentResolver().query(uri, null, null, null, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            if (cursor != null && cursor.moveToFirst()){
+                int displayNameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                if (displayNameIndex >= 0) {
+                    fileName = cursor.getString(displayNameIndex);
+                } else {
+                    fileName = "";
+                }
             }
         } finally {
             if (cursor != null) {
@@ -483,27 +494,56 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         return fileName;
     }
 
-    protected void abrirArchivo() {
-
-
-        File tempFile = new File(cacharro.getId() + "/attach/" );
-        String mimeType = getMimeType(tempFile.getPath());
-
-        // Crear un intent para abrir el archivo con la aplicación predeterminada
-        Intent viewIntent = new Intent(Intent.ACTION_VIEW);
-        viewIntent.setDataAndType(Uri.fromFile(tempFile), mimeType);
-        viewIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        // Comprobar si hay aplicaciones disponibles para manejar el archivo
-        PackageManager packageManager = getPackageManager();
-        List<ResolveInfo> activities;
-        activities = packageManager.queryIntentActivities(viewIntent, 0);
-        boolean isIntentSafe = activities.size() > 0;
-        if (isIntentSafe) {
-            // Si hay aplicaciones disponibles para manejar el archivo, iniciar la actividad
-            startActivity(viewIntent);
+    private void checkLaunchFilePermission(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            // Permission is not granted, request the permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_PHONE_STATE},
+                    REQUEST_CODE_PERMISSION);
         } else {
-            Toast.makeText(this, "No hay aplicaciones disponibles para abrir el archivo.", Toast.LENGTH_SHORT).show();
+            // Permission has already been granted
+            launchFile();
+        }
+    }
+
+    private void launchFilePDF()
+    {
+        String value="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
+        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(value));
+        startActivity(intent);
+
+    }
+
+    protected void launchFile() {
+
+        File tempFile = new File(getFilesDir().getAbsolutePath() + "/" + cacharro.getUid() + "/attach/" + cacharro.getArchivo());
+
+        if( tempFile.isFile() ) {
+
+            String mimeType = getMimeType(tempFile.getPath());
+            Uri fileUri = FileProvider.getUriForFile(this, getPackageName() + ".provider", tempFile);
+            Intent viewIntent = new Intent(Intent.ACTION_VIEW, fileUri);
+            viewIntent.setDataAndType(fileUri, mimeType);
+            viewIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(viewIntent);
+
+            // este código no funciona y el anterior parece abrir en todos los casos los archivos
+            // por ejemplo, si abro una imagen falla.
+            /*
+            PackageManager packageManager = getPackageManager();
+            List<ResolveInfo> activities = packageManager.queryIntentActivities(viewIntent, MATCH_ALL);
+            boolean isIntentSafe = activities.size() > 0;
+            if (isIntentSafe) {
+                // Si hay aplicaciones disponibles para manejar el archivo, iniciar la actividad
+                startActivity(viewIntent);
+            } else {
+                Toast.makeText(this, "No hay aplicaciones disponibles para abrir el archivo.", Toast.LENGTH_SHORT).show();
+            }
+
+             */
+
         }
 
     }
@@ -532,12 +572,10 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
 
     protected String guardaPhoto( Bitmap photo )
     {
-        String directory = getFilesDir().getAbsolutePath() + "/" + cacharro.getId() + "/img/";
+        String directory = getFilesDir().getAbsolutePath() + "/" + cacharro.getUid() + "/img/";
         File fileDirectory = new File(directory);
         if( !fileDirectory.exists() )
-            if (!fileDirectory.mkdirs()) {
-                return "";
-            }
+        fileDirectory.mkdirs();
         String fileName = "imgCamera_" + System.currentTimeMillis() + ".jpg";
         File photoFile = new File(directory+fileName);
         if( photoFile.exists() )
@@ -560,12 +598,10 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         String fileName = null;
         try {
 
-            String directory = getFilesDir().getAbsolutePath() + "/" + cacharro.getId() + "/attach/";
+            String directory = getFilesDir().getAbsolutePath() + "/" + cacharro.getUid() + "/attach/";
             fileName = getFileName(uriFile);
             File fileDirectory = new File(directory);
-            if (!fileDirectory.mkdirs()) {
-                return "";
-            }
+            fileDirectory.mkdirs();
             inputStream = getContentResolver().openInputStream(uriFile);
             File fileOutput = new File(directory + "/" + fileName);
             if( fileOutput.exists())
@@ -577,7 +613,6 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
                 outputStream.write(buffer,0,bytesRead);
             }
             cacharro.setArchivo(fileName);
-            cacharro.setNomarchivo(fileName);
             binding.buttonAbrirArchivo.setVisibility(View.VISIBLE);
         } catch (IOException e) {
             e.printStackTrace();

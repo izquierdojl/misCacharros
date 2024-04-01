@@ -11,13 +11,14 @@ public class Cacharro {
     private int idTipo;
     private String imagen;
     private String archivo;
-    private String nomarchivo;
     private long alta;
+
+    private String uid;
 
     public Cacharro() {
     }
 
-    public Cacharro(int id, String name, String fabricante, int idContacto, int idTipo, String imagen, String archivo, String nomarchivo, long alta) {
+    public Cacharro(int id, String name, String fabricante, int idContacto, int idTipo, String imagen, String archivo, long alta, String uid) {
         this.id = id;
         this.name = name;
         this.fabricante = fabricante;
@@ -25,8 +26,8 @@ public class Cacharro {
         this.idTipo = idTipo;
         this.imagen = imagen;
         this.archivo = archivo;
-        this.nomarchivo = nomarchivo;
         this.alta = alta;
+        this.uid = uid;
     }
 
     public int getId() {
@@ -85,12 +86,12 @@ public class Cacharro {
         this.archivo = archivo;
     }
 
-    public String getNomarchivo() {
-        return nomarchivo;
+    public String getUid() {
+        return uid;
     }
 
-    public void setNomarchivo(String nomarchivo) {
-        this.nomarchivo = nomarchivo;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public long getAlta(){
@@ -111,8 +112,8 @@ public class Cacharro {
                 ", idTipo=" + idTipo +
                 ", imagen='" + imagen + '\'' +
                 ", archivo='" + archivo + '\'' +
-                ", nomarchivo='" + nomarchivo + '\'' +
                 ", alta=" + alta +
+                ", uid='" + uid  +'\'' +
                 '}';
     }
 }
