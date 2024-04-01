@@ -7,6 +7,7 @@ import android.view.View;
 import com.jlib.miscacharros.datos.cacharro.CacharrosBD;
 import com.jlib.miscacharros.datos.cacharro.CacharrosBDAdapter;
 import com.jlib.miscacharros.modelo.Cacharro;
+import com.jlib.miscacharros.modelo.Tipo;
 
 public class AdaptadorCacharrosBD extends AdaptadorCacharros {
 
@@ -42,7 +43,8 @@ public class AdaptadorCacharrosBD extends AdaptadorCacharros {
     public void onBindViewHolder(ViewHolder holder, int posicion) {
         Cacharro cacharro = cacharroPosicion(posicion);
         if( cacharro != null ) {
-            holder.personaliza(cacharro);
+            Tipo tipo = controllerTipo.getTipos().elemento(cacharro.getIdTipo());
+            holder.personaliza(holder,cacharro,tipo);
             holder.botonBorrar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

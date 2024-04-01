@@ -1,5 +1,4 @@
 <androidx.constraintlayout.widget.ConstraintLayout
-
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,21 +10,11 @@
     android:elevation="8dp"
     android:padding="4dp">
 
-    <ImageView android:id="@+id/imagen"
-        android:layout_width="64dp"
-        android:layout_height="?android:attr/listPreferredItemHeight"
-        android:layout_margin="4dp"
-        android:contentDescription="fotografía"
-        android:src="@android:drawable/ic_menu_myplaces"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
+    <!-- TextView para el nombre -->
     <TextView
         android:id="@+id/name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:maxLines="1"
         android:ellipsize="end"
@@ -33,53 +22,92 @@
         android:textColor="@color/black"
         android:background="@color/cardview_shadow_end_color"
         android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@+id/imagen"
-        app:layout_constraintRight_toLeftOf="@+id/botonEditar"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/buttonPanel"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/fabricante" />
 
     <TextView
         android:id="@+id/fabricante"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium.Inverse"
         android:textStyle="normal"
         android:autoLink="web"
-        app:layout_constraintLeft_toRightOf="@+id/imagen"
-        app:layout_constraintTop_toBottomOf="@id/name" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/buttonPanel"
+        app:layout_constraintTop_toBottomOf="@id/name"
+        app:layout_constraintBottom_toTopOf="@id/imagen" />
 
-    <ImageButton
-        android:id="@+id/botonEditar"
+    <!-- ImageView para la imagen -->
+    <ImageView
+        android:id="@+id/imagen"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="fotografía"
+        android:src="@drawable/miscaharros"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fabricante"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <!-- Panel de botones (Editar y Borrar) -->
+    <LinearLayout
+        android:id="@+id/buttonPanel"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="36dp"
-        android:background="#00FFFFFF"
-        android:contentDescription="Editar"
-        android:src="@android:drawable/ic_menu_edit"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/botonBorrar"
-        app:layout_constraintLeft_toRightOf="@+id/name"
-        app:layout_constraintRight_toLeftOf="@+id/name"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ImageButton
-        android:id="@+id/botonBorrar"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="12dp"
-        android:background="#00FFFFFF"
-        android:contentDescription="Borrar"
-        android:src="@android:drawable/ic_menu_delete"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/botonEditar"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintBottom_toTopOf="@id/infoPanel">
 
+        <!-- Botón Editar -->
+        <ImageButton
+            android:id="@+id/botonEditar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="#00FFFFFF"
+            android:contentDescription="Editar"
+            android:src="@android:drawable/ic_menu_edit" />
+
+        <!-- Botón Borrar -->
+        <ImageButton
+            android:id="@+id/botonBorrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00FFFFFF"
+            android:contentDescription="Borrar"
+            android:src="@android:drawable/ic_menu_delete" />
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:id="@+id/infoPanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/buttonPanel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:id="@+id/imgAttach"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="#00FFFFFF"
+            android:contentDescription="Adjunto"
+            android:visibility="gone"
+            android:src="@drawable/baseline_attach_file_24" />
+
+    </LinearLayout>
+
+    <!-- TextView para el ID del Cacharro (oculto) -->
     <TextView
         android:id="@+id/Id_Cacharro"
         android:layout_width="wrap_content"

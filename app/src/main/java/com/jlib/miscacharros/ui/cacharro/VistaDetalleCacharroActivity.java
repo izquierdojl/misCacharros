@@ -640,7 +640,4 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase());
     }
 
-
-
-
 }

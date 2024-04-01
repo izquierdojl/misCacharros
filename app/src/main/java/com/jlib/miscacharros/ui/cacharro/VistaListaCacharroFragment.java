@@ -15,9 +15,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.jlib.miscacharros.Aplicacion;
 import com.jlib.miscacharros.R;
+import com.jlib.miscacharros.controlador.tipo.ControladorTipo;
 import com.jlib.miscacharros.databinding.VistaCacharroListaBinding;
 
 import java.util.Locale;
@@ -40,10 +42,12 @@ public class VistaListaCacharroFragment extends Fragment {
 
         adaptador = ((Aplicacion) requireActivity().getApplication()).getControllerCacharro().getCacharros().getAdaptador();
         adaptador.activity = getActivity();
+        adaptador.controllerTipo = ((Aplicacion) requireActivity().getApplication()).getControllerTipo();
 
         RecyclerView recyclerView = binding.recyclerView;
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        //recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        recyclerView.setLayoutManager( new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setAdapter(adaptador);
 
         EditText editTextSearch = binding.editTextSearch;
@@ -88,7 +92,6 @@ public class VistaListaCacharroFragment extends Fragment {
             editTextSearch.setVisibility(View.VISIBLE);
         else
             editTextSearch.setVisibility(View.GONE);
-
 
     }
 

@@ -39,7 +39,7 @@ public class TiposBD extends generalBD implements RepositorioTipos {
 
     @Override
     public Tipo elemento(int id) {
-        String sql = "SELECT * FROM tipos WHERE id=" + id;
+        String sql = "SELECT * FROM tipo WHERE id=" + id;
         Cursor cursor = getReadableDatabase().rawQuery(sql, null);
         try {
             if (cursor.moveToNext())
