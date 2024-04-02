@@ -32,6 +32,8 @@ public class CacharrosBD extends generalBD implements RepositorioCacharros {
         cacharro.setUid(cursor.getString(cursor.getColumnIndexOrThrow("uid")));
         if(cursor.getInt(cursor.getColumnIndexOrThrow("aviso"))==1)
             cacharro.setAviso(true);
+        cacharro.setMomentoAviso(cursor.getLong(cursor.getColumnIndexOrThrow("momentoaviso")));
+        cacharro.setTextoAviso(cursor.getString(cursor.getColumnIndexOrThrow("textoaviso")));
         return cacharro;
     }
 
