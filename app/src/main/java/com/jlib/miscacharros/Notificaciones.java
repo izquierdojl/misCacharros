@@ -18,8 +18,12 @@ public class Notificaciones extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String title = intent.getStringExtra("title");
         String content = intent.getStringExtra("content");
+        int id = intent.getIntExtra("id",0);
 
         Intent activityIntent = new Intent(context, VistaDetalleCacharroActivity.class);
+        activityIntent.putExtra("id",id);
+        activityIntent.putExtra("modo",2);
+        activityIntent.putExtra("pos",0);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Crear una notificación

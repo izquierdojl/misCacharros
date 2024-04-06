@@ -3,6 +3,7 @@ package com.jlib.miscacharros.ui.cacharro;
 import static android.content.pm.PackageManager.MATCH_ALL;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -133,7 +134,8 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
                 } else if (modo==2) {
                     controller.actualiza(cacharro.getId(),cacharro);
                     adaptador.setCursor(controller.getCacharros().extraeCursor());
-                    adaptador.notifyItemChanged(pos);
+                    if( pos > 0 )
+                      adaptador.notifyItemChanged(pos);
                 }
                 // registramos la notificacion
                 if( cacharro.isAviso() )
@@ -634,7 +636,7 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         String directory = getFilesDir().getAbsolutePath() + "/" + cacharro.getUid() + "/img/";
         File fileDirectory = new File(directory);
         if( !fileDirectory.exists() )
-        fileDirectory.mkdirs();
+            fileDirectory.mkdirs();
         String fileName = "imgCamera_" + System.currentTimeMillis() + ".jpg";
         File photoFile = new File(directory+fileName);
         if( photoFile.exists() )
@@ -752,6 +754,7 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
     }
 
 
+    @SuppressLint("ScheduleExactAlarm")
     private void registraNotificacion(int id,long triggerTimeMillis, String title, String content) {
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(this.ALARM_SERVICE);
@@ -761,11 +764,12 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         notificationIntent.putExtra("content", content);
         notificationIntent.putExtra("id" ,id);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         // Programar la notificación en el tiempo especificado
         if (alarmManager != null) {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTimeMillis, pendingIntent);
+            //alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTimeMillis, pendingIntent);
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTimeMillis, pendingIntent);
         }
     }
 
@@ -777,7 +781,7 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         Intent notificationIntent = new Intent(this, Notificaciones.class);
 
         // Crear un PendingIntent para la notificación
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, notificationIntent, PendingIntent.FLAG_NO_CREATE | PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         // Cancelar la notificación programada
         if (alarmManager != null && pendingIntent != null) {
