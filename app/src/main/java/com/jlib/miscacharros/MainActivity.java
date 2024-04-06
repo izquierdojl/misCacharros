@@ -2,7 +2,10 @@ package com.jlib.miscacharros;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import com.google.android.material.tabs.TabLayout;
@@ -46,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         if( controladorContacto.getContactos().tamano() == 0 )
             controladorContacto.ejemplos();
 
-
+        crearCanalNotificaciones();
 
         /// acciones al pulsar sobre el tab
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -118,6 +121,20 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.container, new VistaListaCacharroFragment())
                 .commit();
 
+    }
+
+    private void crearCanalNotificaciones()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Canal_misCacharros";
+            String description = "Mensajes de notificación de Mis Cacharros";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("channel_id", name, importance);
+            channel.setDescription(description);
+            // Registrar el canal en el NotificationManager
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
 }

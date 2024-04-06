@@ -3,9 +3,11 @@ package com.jlib.miscacharros.ui.cacharro;
 import static android.content.pm.PackageManager.MATCH_ALL;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,10 +43,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.jlib.miscacharros.Aplicacion;
+import com.jlib.miscacharros.Notificaciones;
 import com.jlib.miscacharros.R;
 import com.jlib.miscacharros.controlador.cacharro.ControladorCacharro;
 import com.jlib.miscacharros.controlador.contacto.ControladorContacto;
@@ -110,6 +115,8 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
 
         checkPermisos();
 
+        //mostrarNotificacionPrueba();
+
         binding.actionSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,6 +135,11 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
                     adaptador.setCursor(controller.getCacharros().extraeCursor());
                     adaptador.notifyItemChanged(pos);
                 }
+                // registramos la notificacion
+                if( cacharro.isAviso() )
+                    registraNotificacion(cacharro.getId(),cacharro.getMomentoAviso(),cacharro.getName(), cacharro.getTextoAviso());
+                else
+                    cancelarNotificacion(cacharro.getId());
                 finish();
             }
         });
@@ -738,5 +750,64 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
                 }, hour, minute, true);
         timePickerDialog.show();
     }
+
+
+    private void registraNotificacion(int id,long triggerTimeMillis, String title, String content) {
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(this.ALARM_SERVICE);
+
+        Intent notificationIntent = new Intent(this, Notificaciones.class);
+        notificationIntent.putExtra("title", title);
+        notificationIntent.putExtra("content", content);
+        notificationIntent.putExtra("id" ,id);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Programar la notificación en el tiempo especificado
+        if (alarmManager != null) {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTimeMillis, pendingIntent);
+        }
+    }
+
+    private void cancelarNotificacion(int id) {
+        // Obtener el gestor de alarmas
+        AlarmManager alarmManager = (AlarmManager) getSystemService(this.ALARM_SERVICE);
+
+        // Crear un Intent para la notificación
+        Intent notificationIntent = new Intent(this, Notificaciones.class);
+
+        // Crear un PendingIntent para la notificación
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, notificationIntent, PendingIntent.FLAG_NO_CREATE | PendingIntent.FLAG_IMMUTABLE);
+
+        // Cancelar la notificación programada
+        if (alarmManager != null && pendingIntent != null) {
+            alarmManager.cancel(pendingIntent);
+            pendingIntent.cancel();
+        }
+    }
+
+    private void mostrarNotificacionPrueba() {
+        // Crear un Intent para la notificación
+        Intent notificationIntent = new Intent(this, Notificaciones.class);
+        notificationIntent.putExtra("title", "Título de la notificación de prueba");
+        notificationIntent.putExtra("content", "Contenido de la notificación de prueba");
+
+        // Crear un PendingIntent para la notificación
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Construir la notificación
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "channel_id")
+                .setSmallIcon(R.drawable.miscaharros)
+                .setContentTitle("Título de la notificación de prueba")
+                .setContentText("Contenido de la notificación de prueba")
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+
+        // Mostrar la notificación
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(1, builder.build());
+    }
+
 
 }
