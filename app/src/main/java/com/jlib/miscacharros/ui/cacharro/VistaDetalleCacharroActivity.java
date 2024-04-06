@@ -72,6 +72,9 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
     private ControladorCacharro controller;
     private ControladorTipo controllerTipo;
     private ControladorContacto controllerContacto;
+
+    private boolean permisoFicheros;
+    private boolean permisoCamara;
     private int pos;
     private int modo; //1 - Añadir  2 - Editar
     private Cacharro cacharro;
@@ -101,6 +104,11 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         calendarMomento = Calendar.getInstance();
+
+        permisoCamara = false;
+        permisoFicheros = false;
+
+        checkPermisos();
 
         binding.actionSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,7 +230,9 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss(); // Cierra el cuadro de diálogo
-                                    checkCameraPermission();
+                                    if( permisoCamara ){
+                                        dispatchTakePictureIntent();
+                                    }
                                 }
                             })
                             .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -234,7 +244,9 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
                             .show();
 
                 }else {
-                    checkCameraPermission();
+                    if( permisoCamara ){
+                        dispatchTakePictureIntent();
+                    }
                 }
             }
         });
@@ -250,7 +262,8 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss(); // Cierra el cuadro de diálogo
-                                    checkGalleryPermission();
+                                    if( permisoFicheros )
+                                        openGallery();
                                 }
                             })
                             .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -262,7 +275,8 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
                             .show();
 
                 } else {
-                    checkGalleryPermission();
+                    if( permisoFicheros )
+                        openGallery();
                 }
             }
         });
@@ -278,8 +292,8 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss(); // Cierra el cuadro de diálogo
-                                    checkFilePermission();
-                                    //
+                                    if( permisoFicheros )
+                                        openFile();
                                 }
                             })
                             .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -291,7 +305,8 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
                             .show();
 
                 } else {
-                    checkFilePermission();
+                    if( permisoFicheros )
+                        openFile();
                 }
             }
         });
@@ -410,7 +425,6 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
 
     private String currentPhotoPath;
 
-    // Método para verificar y solicitar permisos de cámara en tiempo de ejecución
     private void checkCameraPermission() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -418,14 +432,31 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.CAMERA},
                     REQUEST_PERMISSION_CAMERA);
-        } else {
-            // Permission has already been granted
-            dispatchTakePictureIntent();
+        }else{
+            this.permisoCamara = true;
+        }
+    }
+
+    private void checkPermisos()
+    {
+        checkFilePermission();
+    }
+
+    private void checkFilePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request the permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_CODE_PERMISSION);
+        }else{
+            this.permisoFicheros = true;
         }
     }
 
     // Método para iniciar la actividad de captura de imágenes
-    private void dispatchTakePictureIntent() {
+    private void dispatchTakePictureIntent()
+    {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -436,50 +467,29 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_PERMISSION ) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                this.permisoFicheros = true;
+            } else {
+                this.permisoFicheros = false;
+            }
+            checkCameraPermission();
+        }
         if (requestCode == REQUEST_PERMISSION_CAMERA) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted, dispatch the take picture intent
-                dispatchTakePictureIntent();
+                this.permisoCamara = true;
             } else {
-                // Permission denied
-                // You can show a message or take alternative action here
+                this.permisoCamara = false;
             }
         }
     }
-
-    private void checkGalleryPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted, request the permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    REQUEST_CODE_PERMISSION);
-        } else {
-            // Permission has already been granted
-            openGallery();
-        }
-    }
-
 
     private void openGallery() {
         // Intent para abrir la galería
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryIntent.setType("image/*");
         startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST);
-    }
-
-
-    private void checkFilePermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted, request the permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    REQUEST_CODE_PERMISSION);
-        } else {
-            // Permission has already been granted
-            openFile();
-        }
     }
 
     private void openFile()
@@ -523,8 +533,12 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
             }
         }
         if (requestCode == PICK_FILE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri selectedFileUri = data.getData();
-            cacharro.setArchivo(guardaFile(selectedFileUri));
+            try {
+                Uri selectedFileUri = data.getData();
+                cacharro.setArchivo(guardaFile(selectedFileUri));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -547,28 +561,6 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
             }
         }
         return fileName;
-    }
-
-    private void checkLaunchFilePermission(){
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-                != PackageManager.PERMISSION_GRANTED)
-        {
-            // Permission is not granted, request the permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_PHONE_STATE},
-                    REQUEST_CODE_PERMISSION);
-        } else {
-            // Permission has already been granted
-            launchFile();
-        }
-    }
-
-    private void launchFilePDF()
-    {
-        String value="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
-        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse(value));
-        startActivity(intent);
-
     }
 
     protected void launchFile() {

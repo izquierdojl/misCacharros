@@ -40,12 +40,13 @@ public class MainActivity extends AppCompatActivity {
         controladorContacto = ((Aplicacion) getApplication()).getControllerContacto();
         controladorContacto.setActividad(this);
 
-
         if( controladorTipo.getTipos().tamano() == 0 )
             controladorTipo.ejemplos();
 
         if( controladorContacto.getContactos().tamano() == 0 )
             controladorContacto.ejemplos();
+
+
 
         /// acciones al pulsar sobre el tab
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
