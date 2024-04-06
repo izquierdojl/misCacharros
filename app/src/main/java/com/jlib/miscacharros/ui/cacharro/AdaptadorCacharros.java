@@ -36,6 +36,7 @@ public class AdaptadorCacharros extends
         private TextView id;
         private ImageView imagen;
         private ImageView archivo;
+        private ImageView alerta;
         protected ImageButton botonBorrar;
         protected ImageButton botonEditar;
         public ViewHolder(VistaCacharroElementoListaBinding itemView) {
@@ -44,6 +45,7 @@ public class AdaptadorCacharros extends
             id = itemView.IdCacharro;
             imagen = itemView.imagen;
             archivo = itemView.imgAttach;
+            alerta = itemView.imgAlarm;
             fabricante = itemView.fabricante;
             botonBorrar = itemView.botonBorrar;
             botonEditar = itemView.botonEditar;
@@ -64,6 +66,12 @@ public class AdaptadorCacharros extends
                 archivo.setVisibility(View.VISIBLE);
             }else{
                 archivo.setVisibility(View.GONE);
+            }
+            if( cacharro.isAviso() )
+            {
+                alerta.setVisibility(View.VISIBLE);
+            }else{
+                alerta.setVisibility(View.GONE);
             }
             holder.itemView.setBackgroundColor(tipo.getColor());
 

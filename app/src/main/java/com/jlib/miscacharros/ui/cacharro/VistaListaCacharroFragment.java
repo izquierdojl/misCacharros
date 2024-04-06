@@ -35,7 +35,6 @@ public class VistaListaCacharroFragment extends Fragment {
 
     private AdaptadorCacharrosBD adaptador;
     private @NonNull VistaCacharroListaBinding binding;
-
     private boolean[] filtroTipos;
 
     @Nullable

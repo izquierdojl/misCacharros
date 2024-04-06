@@ -106,6 +106,17 @@
             android:visibility="gone"
             android:src="@drawable/baseline_attach_file_24" />
 
+        <ImageView
+            android:id="@+id/imgAlarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="#00FFFFFF"
+            android:contentDescription="Alarma"
+            android:visibility="gone"
+            android:src="@android:drawable/ic_lock_idle_alarm" />
+
+
     </LinearLayout>
 
     <!-- TextView para el ID del Cacharro (oculto) -->
