@@ -1,7 +1,5 @@
 package com.jlib.miscacharros.ui.cacharro;
 
-import static android.content.pm.PackageManager.MATCH_ALL;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
@@ -13,7 +11,6 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -69,7 +66,6 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -97,14 +93,19 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         int id = extras.getInt("id",0);
         pos = extras.getInt("pos",0);
         modo = extras.getInt("modo",0);
+        String uid = extras.getString("uid");
         controller = ((Aplicacion) getApplication()).getControllerCacharro();
         controllerTipo = ((Aplicacion) getApplication()).getControllerTipo();
         controllerContacto = ((Aplicacion) getApplication()).getControllerContacto();
         adaptador = controller.getCacharros().getAdaptador();
-        if( modo == 2 )
-            cacharro = controller.getCacharros().elemento(id);
-        else
+        if( modo == 2 ) {
+            if (uid != null && !uid.isEmpty())
+                cacharro = controller.getCacharros().elementobyUid(uid);
+            else
+                cacharro = controller.getCacharros().elemento(id);
+        }else {
             cacharro = new Cacharro();
+        }
         Toolbar toolbar = binding.toolbarDetalleCacharro;
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -138,10 +139,14 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
                       adaptador.notifyItemChanged(pos);
                 }
                 // registramos la notificacion
-                if( cacharro.isAviso() )
-                    registraNotificacion(cacharro.getId(),cacharro.getMomentoAviso(),cacharro.getName(), cacharro.getTextoAviso());
+                if (cacharro.isAviso())
+                    if (Notificaciones.checkNotificationPermissions(VistaDetalleCacharroActivity.this)) {
+                        registraNotificacion(cacharro, cacharro.getMomentoAviso(), cacharro.getName(), cacharro.getTextoAviso());
+                    }else{
+                        Toast.makeText(VistaDetalleCacharroActivity.this, "No tiene permiso para acceder a las notificaciones.", Toast.LENGTH_LONG).show();
+                    }
                 else
-                    cancelarNotificacion(cacharro.getId());
+                    cancelarNotificacion(cacharro);
                 finish();
             }
         });
@@ -431,6 +436,7 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         }
     }
 
+    private static final int REQUEST_PERMISSION_SCHEDULE = 3;
     private static final int REQUEST_PERMISSION_CAMERA = 2;
     private static final int pic_id = 123;
     private static final int REQUEST_CODE_PERMISSION = 100;
@@ -465,6 +471,7 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
                     REQUEST_CODE_PERMISSION);
         }else{
             this.permisoFicheros = true;
+            checkCameraPermission();
         }
     }
 
@@ -755,25 +762,39 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
 
 
     @SuppressLint("ScheduleExactAlarm")
-    private void registraNotificacion(int id,long triggerTimeMillis, String title, String content) {
+    private void registraNotificacion(Cacharro cacharro,long triggerTimeMillis, String title, String content) {
 
-        AlarmManager alarmManager = (AlarmManager) getSystemService(this.ALARM_SERVICE);
+        if( triggerTimeMillis > System.currentTimeMillis() ) // sólo se registra la aletra si el tiempo el superior
+        {
 
-        Intent notificationIntent = new Intent(this, Notificaciones.class);
-        notificationIntent.putExtra("title", title);
-        notificationIntent.putExtra("content", content);
-        notificationIntent.putExtra("id" ,id);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(this.ALARM_SERVICE);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+            Intent notificationIntent = new Intent(this, Notificaciones.class);
+            notificationIntent.putExtra("title", title);
+            notificationIntent.putExtra("content", content);
+            notificationIntent.putExtra("id", cacharro.getId());
+            notificationIntent.putExtra("uid", cacharro.getUid());
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, cacharro.getId(), notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
-        // Programar la notificación en el tiempo especificado
-        if (alarmManager != null) {
-            //alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTimeMillis, pendingIntent);
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTimeMillis, pendingIntent);
+            // Programar la notificación en el tiempo especificado
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (alarmManager.canScheduleExactAlarms()) {
+                    if (alarmManager != null) {
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTimeMillis, pendingIntent);
+                        //Toast.makeText(VistaDetalleCacharroActivity.this, "Alarma registrada.", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(VistaDetalleCacharroActivity.this, "No tiene permisos para registrar alarmas.", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTimeMillis, pendingIntent);
+            }
+        }else{
+            Toast.makeText(VistaDetalleCacharroActivity.this, "Alarma no registrada, atención, inferior a hora actual.", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void cancelarNotificacion(int id) {
+    private void cancelarNotificacion(Cacharro cacharro) {
         // Obtener el gestor de alarmas
         AlarmManager alarmManager = (AlarmManager) getSystemService(this.ALARM_SERVICE);
 
@@ -781,12 +802,21 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         Intent notificationIntent = new Intent(this, Notificaciones.class);
 
         // Crear un PendingIntent para la notificación
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, cacharro.getId(), notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         // Cancelar la notificación programada
-        if (alarmManager != null && pendingIntent != null) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if( alarmManager.canScheduleExactAlarms()) {
+                if (alarmManager != null && pendingIntent != null) {
+                    alarmManager.cancel(pendingIntent);
+                    pendingIntent.cancel();
+                    //Toast.makeText(VistaDetalleCacharroActivity.this, "Alarma cancelada.", Toast.LENGTH_LONG).show();
+                }
+            }else {
+                Toast.makeText(VistaDetalleCacharroActivity.this, "No tiene permisos para registrar alarmas.", Toast.LENGTH_LONG).show();
+            }
+        }else{
             alarmManager.cancel(pendingIntent);
-            pendingIntent.cancel();
         }
     }
 
@@ -797,7 +827,7 @@ public class VistaDetalleCacharroActivity extends AppCompatActivity {
         notificationIntent.putExtra("content", "Contenido de la notificación de prueba");
 
         // Crear un PendingIntent para la notificación
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         // Construir la notificación
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "channel_id")

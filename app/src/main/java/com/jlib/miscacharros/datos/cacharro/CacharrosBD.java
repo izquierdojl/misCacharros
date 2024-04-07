@@ -60,6 +60,23 @@ public class CacharrosBD extends generalBD implements RepositorioCacharros {
         }
     }
 
+    public Cacharro elementobyUid(String uid)
+    {
+        String sql = "SELECT * FROM cacharro WHERE uid='" + uid + "'";
+        Cursor cursor = getReadableDatabase().rawQuery(sql, null);
+        try {
+            if (cursor.moveToNext())
+                return extraeCacharro(cursor);
+            else
+                throw new SQLException("Error al acceder al elemento uid" + uid);
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+    }
+
     @Override
     public void anade(Cacharro cacharro) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -144,7 +161,7 @@ public class CacharrosBD extends generalBD implements RepositorioCacharros {
     // Método para filtrar datos según el término de búsqueda
 
     public Cursor extraeCursorFiltrado(String searchTerm) {
-        String sql = "SELECT * FROM cacharro WHERE name LIKE '%" + searchTerm + "%' or fabricante LIKE '%" + searchTerm + "%'  ORDER BY id DESC";
+        String sql = "SELECT * FROM cacharro WHERE name LIKE '%" + searchTerm + "%' or fabricante LIKE '%" + searchTerm + "%'  ORDER BY name";
         SQLiteDatabase db = getReadableDatabase();
         return db.rawQuery(sql, null);
     }
@@ -162,7 +179,7 @@ public class CacharrosBD extends generalBD implements RepositorioCacharros {
                 whereIn += ")";
         }
         if(!whereIn.isEmpty()) {
-            String sql = "SELECT * FROM cacharro WHERE idTipo IN "+whereIn+" ORDER BY id DESC";
+            String sql = "SELECT * FROM cacharro WHERE idTipo IN "+whereIn+" ORDER BY name";
             SQLiteDatabase db = getReadableDatabase();
             return db.rawQuery(sql, null);
         }else{

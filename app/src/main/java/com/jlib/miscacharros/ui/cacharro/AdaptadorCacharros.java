@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jlib.miscacharros.Aplicacion;
+import com.jlib.miscacharros.R;
 import com.jlib.miscacharros.controlador.cacharro.ControladorCacharro;
 import com.jlib.miscacharros.controlador.tipo.ControladorTipo;
 import com.jlib.miscacharros.databinding.VistaCacharroElementoListaBinding;
@@ -60,6 +61,9 @@ public class AdaptadorCacharros extends
                 options.inJustDecodeBounds = false;
                 Bitmap photoBmp = BitmapFactory.decodeFile(holder.itemView.getContext().getFilesDir().getAbsolutePath() + "/" + cacharro.getUid() + "/img/" + cacharro.getImagen(), options);
                 imagen.setImageBitmap(photoBmp);
+                imagen.setVisibility(View.VISIBLE);
+            }else{
+                imagen.setImageResource(R.drawable.miscaharros);
                 imagen.setVisibility(View.VISIBLE);
             }
             if( cacharro.getArchivo()!=null && !cacharro.getArchivo().isEmpty() ){

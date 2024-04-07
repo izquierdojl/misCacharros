@@ -148,6 +148,7 @@ public class VistaDetalleContactoActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar_detalle_contacto, menu);
+        binding.toolbarDetalle.setTitle("Detalle Contacto");
         return true;
     }
 

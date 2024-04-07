@@ -15,12 +15,12 @@
         android:id="@+id/imagen"
         android:layout_width="128dp"
         android:layout_height="128dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_margin="4dp"
         android:contentDescription="fotografía"
         android:src="@drawable/miscaharros"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fabricante"
+        app:layout_constraintEnd_toStartOf="@id/buttonPanel"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <!-- TextView para el nombre -->
@@ -94,27 +94,8 @@
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/buttonPanel"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/imagen"
         app:layout_constraintBottom_toBottomOf="parent">
-
-        <ImageView
-            android:id="@+id/imgAttach"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:background="#00FFFFFF"
-            android:contentDescription="Adjunto"
-            android:visibility="gone"
-            android:src="@drawable/baseline_attach_file_24" />
-
-        <ImageView
-            android:id="@+id/imgAlarm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:background="#00FFFFFF"
-            android:contentDescription="Alarma"
-            android:visibility="gone"
-            android:src="@android:drawable/ic_lock_idle_alarm" />
 
 
     </LinearLayout>
@@ -125,5 +106,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/imgAlarm"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_margin="4dp"
+        android:contentDescription="Alarma"
+        android:src="@drawable/baseline_alarm_on_24"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/imgAttach"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_margin="4dp"
+        android:contentDescription="Adjunto"
+        android:src="@drawable/baseline_attach_file_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/imgAlarm"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

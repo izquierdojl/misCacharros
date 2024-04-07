@@ -2,6 +2,7 @@ package com.jlib.miscacharros.ui.cacharro;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
@@ -57,7 +58,16 @@ public class VistaListaCacharroFragment extends Fragment {
         RecyclerView recyclerView = binding.recyclerView;
         recyclerView.setHasFixedSize(true);
         //recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        recyclerView.setLayoutManager( new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+
+        int orientation = getResources().getConfiguration().orientation;
+
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            recyclerView.setLayoutManager( new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
+        } else {
+            // Orientación vertical: layout lineal
+            recyclerView.setLayoutManager( new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        }
+
         recyclerView.setAdapter(adaptador);
 
         EditText editTextSearch = binding.editTextSearch;
@@ -120,6 +130,21 @@ public class VistaListaCacharroFragment extends Fragment {
             binding.editTextSearch.setVisibility(View.VISIBLE);
         else
             binding.editTextSearch.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        int orientation = getResources().getConfiguration().orientation;
+
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            binding.recyclerView.setLayoutManager( new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
+        } else {
+            // Orientación vertical: layout lineal
+            binding.recyclerView.setLayoutManager( new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        }
+
     }
 
     private void showDlgFilter() {
