@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         tabs.addTab(tabs.newTab().setText("Cacharros"));
         tabs.addTab(tabs.newTab().setText("Categorías"));
         tabs.addTab(tabs.newTab().setText("Contactos"));
-        tabs.addTab(tabs.newTab().setText("Acerca de ..."));
+        tabs.addTab(tabs.newTab().setText("Acerca de..."));
 
         controladorTipo = ((Aplicacion) getApplication()).getControllerTipo();
         controladorTipo.setActividad(this);
